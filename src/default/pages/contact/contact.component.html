@@ -1,0 +1,53 @@
+
+    <mat-card class="contact-wrap">
+    <div class="contact-form">
+    <h3>{{'contact.CONTACTUS'|translate}}</h3>
+    
+    <form [formGroup]="contactForm" (ngSubmit)="onContactFormSubmit(contactForm.value)">
+    
+    <div class="input-group">
+    <p>{{'contact.Name'|translate}}<sup>*</sup></p>
+    <input (keyup)="onKeyPress($event, 'name')" placeholder="{{'contact.Name'|translate}}"
+    formControlName="name" required [ngClass]="{'validationcolor':((contactForm.controls.name.errors?.required)&&(submitted))}">
+    <mat-error *ngIf="contactForm.controls['name'].errors?.required && submitted">
+    {{'Error.NameIsRequired'|translate}}</mat-error>
+    </div>
+    
+    
+    <div class="input-group">
+    <p>{{'contact.Email'|translate}}<sup>*</sup></p>
+    <input placeholder="{{'contact.Email'|translate}}" formControlName="email" required [ngClass]="{'validationcolor':((contactForm.controls.email.errors?.required)&&(submitted))}">
+    <mat-error *ngIf="contactForm.controls['email'].errors?.required && submitted">
+    {{'Error.EmailIsRequired'|translate}}</mat-error>
+    <mat-error *ngIf="contactForm.controls['email'].hasError('invalidEmail') && submitted">
+    {{'Error.InvalidEmailAddress'|translate}}</mat-error>
+    </div>
+    
+    
+    <div class="input-group">
+    <p>{{'contact.Phone'|translate}}<sup>*</sup></p>
+    <input placeholder="{{'contact.Phone'|translate}}" formControlName="phone" maxlength="15"
+    appOnlyNumber required [ngClass]="{'validationcolor':((contactForm.controls.phone.errors?.required)&&(submitted))}">
+    <mat-error *ngIf="contactForm.controls['phone'].errors?.required && submitted">
+    {{'Error.PhoneIsRequired'|translate}}</mat-error>
+    </div>
+    
+    
+    <div class="input-group">
+    <p>{{'contact.Message'|translate}}<sup>*</sup></p>
+    <textarea (keyup)="onKeyPress($event, 'message')" placeholder="{{'contact.Message'|translate}}" formControlName="message" [ngClass]="{'validationcolor':((contactForm.controls.message.errors?.required)&&(submitted))}"
+    required></textarea>
+    <mat-error *ngIf="contactForm.controls['message'].errors?.required && submitted">
+    {{'Error.MessageIsRequired'|translate}}</mat-error>
+    </div>
+    
+    <div>
+    <button mat-raised-button color="primary" class="contact-wrap"
+    type="submit">{{'contact.Submit'|translate}}</button>
+    </div>
+    </form>
+    </div>
+    <div class="contact-img">
+    <img src="assets/img/contact-img.svg">
+    </div>
+</mat-card>

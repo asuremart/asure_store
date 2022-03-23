@@ -1,0 +1,105 @@
+<h3 class="acc-title">{{'account.AddAddress'|translate}}</h3>
+<div class="wrapper-accont addaddresses">
+    <form [formGroup]="addAddressForm" (ngSubmit)="onSubmit(addAddressForm.value)">
+        <h3></h3>
+        <div class="add-address-row flex">
+            <div class="aa-col">
+                <div class="input-group">
+                    <p>{{'account.Name'|translate}}<sup>*</sup></p>
+                    <input type="text" placeholder="{{'account.Name'|translate}}" formControlName="name" required (keypress)="onlyText($event)" [ngClass]="{'validationcolor':addAddressForm.controls.name.errors?.required && submitted}">
+                    <mat-error *ngIf="addAddressForm.controls.name.errors?.required && submitted">{{'account.Namerequired'|translate}}
+                    </mat-error>
+                </div>
+            </div>
+            <div class="aa-col">
+                <div class="input-group">
+                    <p>{{'account.Country'|translate}}<sup>*</sup></p>
+                    <ng-select  formControlName="country" (selectionChange)="selectCountry($event)" [ngClass]="{'validationcolor':addAddressForm.controls.country.errors?.required && submitted}">
+                        <ng-option *ngFor="let list of listSandbox.countryList$ | async" [value]="list.countryId">
+                            {{list.name}}
+                        </ng-option>
+                    </ng-select>
+                    <mat-error *ngIf="addAddressForm.controls.country.errors?.required && submitted">{{'account.Countryrequired'|translate}}
+                    </mat-error>
+                 
+                </div>
+            </div>
+            <div class="aa-col">
+                <div class="input-group">
+                    <p>{{'account.Address1'|translate}}<sup>*</sup></p>
+                    <input placeholder="{{'account.Address1'|translate}}" formControlName="address1" required [ngClass]="{'validationcolor':addAddressForm.controls.address1.errors?.required && submitted}">
+                    <mat-error *ngIf="addAddressForm.controls.address1.errors?.required && submitted">{{'account.Address1required'|translate}}</mat-error>
+                  
+                </div>
+            </div>
+            <div class="aa-col">
+                <div class="input-group" *ngIf="countryId === 99">
+                    <p>{{'account.State'|translate}} <sup>*</sup></p>
+                    <ng-select  formControlName="state" [ngClass]="{'validationcolor':addAddressForm.controls.state.errors?.required && submitted}">
+                        <ng-option placeholder="{{'account.State'|translate}}" *ngFor="let list of accountSandbox.zoneList$ | async" [value]="list.name">
+                            {{list.name}}
+                        </ng-option>
+                    </ng-select>
+                    <mat-error *ngIf="addAddressForm.controls.state.errors?.required && submitted">{{'account.staterequired'|translate}}
+                    </mat-error>
+                </div>
+                <div class="input-group" *ngIf="countryId !== 99">
+                    <p>{{'account.State'|translate}}<sup>*</sup></p>
+                    <input placeholder="{{'account.State'|translate}}" formControlName="state" required [ngClass]="{'validationcolor':addAddressForm.controls.state.errors?.required && submitted}">
+                    <mat-error *ngIf="addAddressForm.controls.state.errors?.required && submitted">State is required
+                    </mat-error>
+                </div>
+            </div>
+        
+            <div class="aa-col" >
+                <div class="input-group">
+                    <p>{{'account.Address2'|translate}} <sup>*</sup></p>
+                    <input placeholder="{{'account.Address2'|translate}}" formControlName="address2" required [ngClass]="{'validationcolor':addAddressForm.controls.address2.errors?.required && submitted}">
+                    <mat-error *ngIf="addAddressForm.controls.address2.errors?.required && submitted">{{'account.Address2required'|translate}}</mat-error>
+                  
+
+                </div>
+
+            </div>
+            <div class="aa-col">
+                <div class="input-group">
+                     <p>{{'account.City'|translate}} <sup>*</sup></p>
+                    <input type="text" placeholder="{{'account.City'|translate}}" formControlName="city" (keypress)="onlyText($event)" [ngClass]="{'validationcolor':addAddressForm.controls.city.errors?.required && submitted}">
+                    <mat-error *ngIf="addAddressForm.controls.city.errors?.required && submitted">{{'account.Cityrequired'|translate}}
+                    </mat-error>
+                 
+                  
+                </div>
+            </div>
+
+           
+            <div fxFlex="100" fxFlex.gt-sm="50" class="px-1 atype mode-group">
+                <label>{{'account.AddressType'|translate}}</label>
+                <mat-radio-group formControlName="addresstype" fxLayout="row" fxLayoutGap=".5rem">
+                    <mat-radio-button [value]="'1'">{{'account.Home'|translate}}
+                    </mat-radio-button>
+                    <mat-radio-button [value]="'0'">{{'account.Work'|translate}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div class="aa-col">
+                <div class="input-group">
+                      <p>{{'account.Pincode'|translate}} <sup>*</sup></p>
+                    <input placeholder="{{'account.Pincode'|translate}}" appOnlyNumber maxlength="6"
+                        formControlName="postcode" [ngClass]="{'validationcolor':addAddressForm.controls.postcode.errors?.required && submitted}">
+                    <mat-error *ngIf="addAddressForm.controls.postcode.errors?.required && submitted">{{'account.Pincode'|translate}}</mat-error> 
+
+                </div>
+
+            </div>
+
+
+            <div class="aa-btn">
+                <button mat-raised-button color="primary">{{'account.SaveAddress'|translate}}</button>
+                <button style="cursor: pointer;" (click)="cancel()"
+                    class="cancel">{{'account.Cancel'|translate}}</button>
+
+            </div>
+        </div>
+    </form>
+</div>

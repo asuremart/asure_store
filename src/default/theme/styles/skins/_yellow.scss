@@ -1,0 +1,11 @@
+$yellow-primary: mat.define-palette(mat.$yellow-palette, 400, 100, 500);
+$yellow-accent: mat.define-palette(mat.$grey-palette, 100, 400, 100);
+$yellow-warn: mat.define-palette(mat.$red-palette, A200);
+
+$yellow-theme: mat.define-light-theme((
+    color: (
+        primary: $yellow-primary, 
+        accent: $yellow-accent,
+        warn: $yellow-warn
+    )
+));

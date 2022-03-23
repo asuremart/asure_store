@@ -1,0 +1,8 @@
+
+
+<div  fxLayout="direction" class="rating-row" fxLayoutAlign="(direction == 'row') ? 'start center' : 'center end'">
+  <div class="ratings flex">
+      <div class="star flex" ><p> {{rating|number}}</p>  <span class="material-icons">grade</span></div>
+      <span *ngIf="ratingCount && reviewCount > 0">{{ratingCount|number}} {{'rating.Ratings'|translate}} & {{reviewCount|number}} {{'rating.Reviews'|translate}}</span> 
+  </div>
+</div>

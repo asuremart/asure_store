@@ -1,0 +1,72 @@
+<!-- spinner -->
+<div class="wrapper" *ngIf="sandbox.orderTrackDetailsLoading$ | async">
+    <div class="overlay">
+        <div class="spinner-wrapper">
+            <app-spinner [isShow]="sandbox.orderTrackDetailsLoading$ | async"></app-spinner>
+        </div>
+    </div>
+</div>
+<div *ngIf="(sandbox.orderTrackDetails$ | async) && (sandbox.orderTrackDetailsLoaded$ | async)">
+
+    <ng-container *ngIf="(sandbox.orderTrackDetails$ | async) as details">
+        <div class="flex order-title">
+            <h3>{{'trackOrder.trackOrder'|translate}}</h3>
+        </div>
+        <div class="track-details flex">
+            <h3>{{'trackOrder.trackingId'|translate}} : <span> {{details.trackingId}}</span> </h3>
+            <a href="javascript:void(0)" [routerLink]="['/account/order-details', details.orderProductId]">{{'account.OrderDetails'|translate}}</a>
+        </div>
+        <mat-card>
+            <div class="ord-his-img"> <img [src]="imageUrl + '/' + details.containerName + '/' + details.productImage + '?tr=w-200,h-200'">
+            </div>
+            <div class="ord-his-con flex">
+                <div class="ord-hislft">
+                    <h3>{{details.productName}}</h3>
+                    <ng-container>
+                        <p class="or-opt" style="color: gray">
+                            <span>{{details.varientName}}</span>
+                        </p>
+                    </ng-container>
+                    <h4>{{(listSandbox.symbolSetting$ | async)?.symbol}} {{details.total}}</h4>
+
+                </div>
+
+
+                <div class="ord-hisrht">
+                    <h3>{{'account.ShippingAddress'|translate}}</h3>
+                    <h4>{{details.shippingAddress1}}</h4>
+                    <p>{{details.shippingAddress2}}</p>
+                    <p>{{details.shippingCity}}</p>
+                    <p>{{details.shippingPostcode}}</p>
+                </div>
+
+                <div class="ord-hisrow flex">
+                    <div class="os-row " [ngClass]="{'os-completed' : list.createdDate !== ''}" *ngFor="let list of details.deliveryStatus">
+
+                        <div class="os-img" *ngIf="list.createdDate !== ''"> <img src="assets/tracking icon/1.svg">
+                        </div>
+
+                        <div class="os-img" *ngIf="list.createdDate === '' "> <img src="assets/tracking icon/3.svg">
+                        </div>
+                        <div class="os-col">
+                            <h3>{{list.name}}</h3>
+                            <p>{{list.createdDate | date: "dd MMM, EEEE h:mm a ":" +0000"}}</p>
+                            <div class="track-id" *ngIf="list.createdDate !== '' && list.orderStatusId === 4">
+                                <div>
+                                    <h5>Tracking ID : {{details.trackingId}}</h5>
+                                </div>
+                                <div>
+                                    <h5>Tracking URL : <a class="track-link" href="details.trackingUrl">{{details.trackingUrl}}</a></h5>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </ng-container>
+</div>

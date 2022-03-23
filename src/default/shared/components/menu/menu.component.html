@@ -1,0 +1,47 @@
+<mat-toolbar class="top-navbar mat-elevation-z2" fxLayoutAlign="" color="">
+    <a *ngIf="router.url !== '/'" (mouseover)="over()" mat-button [routerLink]="['/']" routerLinkActive="horizontal-active-link" [routerLinkActiveOptions]="{exact:true}" (click)="setTitle('Home')">
+        <mat-icon color="primary" style="font-size: 25px;" aria-hidden="false" aria-label="Spurtcommerce Home Icon">home</mat-icon>
+    </a>
+
+    <a mat-button [disableRipple]="true" #button class="colorMenu" [routerLink]="['/products', category.categorySlug]" routerLinkActive="horizontal-active-link" *ngFor="let category of categories;let i=index" [routerLinkActiveOptions]="{exact:true}" [matMenuTriggerFor]="menu"
+        (mouseenter)="openResourceMenu(i, category.categoryId); recheckIfInMenu = true" (mouseleave)="closeResourceMenu(); recheckIfInMenu = false" (click)="setMainTitle(i, category)" style="font-weight: 500; font-family: Roboto,Arial,sans-serif; ">{{category.name}}
+        <mat-icon class="caret">keyboard_arrow_down</mat-icon>
+    </a>
+    <mat-menu #menu="matMenu" [hasBackdrop]="false" [overlapTrigger]="false" class="mega-menu app-dropdown" panelClass="cat-menu">
+        <span (mouseenter)="recheckIfInMenu = true" (mouseleave)="closeResourceMenu(); recheckIfInMenu = false">
+            <div fxLayout="row wrap" (click)="over()" *ngIf="((index)||(index === 0))" class="mat-menuss">
+                <div fxFlex="25" fxLayout="column" class="menu-column"
+                    *ngFor="let subCategory of categories[index].children">
+                    <a style="font-family: Roboto,Arial,sans-serif;" mat-menu-item [disableRipple]="true"
+                        class="matMenuTitle" [routerLink]="['/products', subCategory.categorySlug]"
+                        [routerLinkActiveOptions]="{exact:true}"
+                        (click)="linkActive(categories[index], subCategory.categorySlug)"
+                        routerLinkActive="horizontal-active-link"
+                        [ngClass]="{'isActiveSub': activeSubSlug === subCategory.categorySlug}">
+                        <b>{{subCategory.name}} <span style="position: relative;top:4px;"
+                                class="material-icons">arrow_right</span></b>
+
+        </a>
+        <div *ngIf="subCategory.children">
+            <div *ngFor="let grandsubCategory of subCategory.children;let j=index">
+                <a style="font-family: Roboto,Arial,sans-serif;" mat-menu-item [disableRipple]="true" [routerLink]="['/products', grandsubCategory.categorySlug]" [routerLinkActiveOptions]="{exact:true}" (click)="linkActive(categories[index], grandsubCategory.categorySlug)"
+                    routerLinkActive="horizontal-active-link" [ngClass]="{'isActiveSub': activeSubSlug === grandsubCategory.categorySlug}">
+                                {{grandsubCategory.name}}</a>
+            </div>
+        </div>
+        </div>
+        </div>
+        </span>
+    </mat-menu>
+    <mat-menu #animals="matMenu" [overlapTrigger]="false" class="app-dropdown service-menu" panelClass="ser-menu">
+        <a mat-menu-item routerLink="/services" routerLinkActive="horizontal-active-link" [routerLinkActiveOptions]="{exact:true}">All Services</a>
+        <ng-container *ngFor="let service of listSandbox.serviceCategory$ | async">
+            <ng-container *ngIf="service && service.serviceCategoryId">
+                <a mat-menu-item [routerLink]="['/services/list/', service.serviceCategoryId, {category: service.name}]" (click)="setTitle('Service')" style="font-weight: 500; font-family: Roboto,Arial,sans-serif;">{{service.name}}</a>
+            </ng-container>
+        </ng-container>
+    </mat-menu>
+    <a (mouseover)="over()" mat-button routerLink="/blogs" routerLinkActive="horizontal-active-link" [routerLinkActiveOptions]="{exact:true}" (click)="setTitle('Blogs')" style="font-weight: 500; font-family: Roboto,Arial,sans-serif;">Blogs</a>
+    <a (mouseover)="over()" mat-button routerLink="/contact" routerLinkActive="horizontal-active-link" [routerLinkActiveOptions]="{exact:true}" (click)="setTitle('Contacts')" style="font-weight: 500; font-family: Roboto,Arial,sans-serif;">{{'Shared.Contact'|translate}}</a>
+
+</mat-toolbar>

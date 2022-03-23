@@ -1,0 +1,45 @@
+<div class="mat-table orders-table">
+    <div class="wrapper" *ngIf="accountSandbox.quotationListLoading$ | async">
+        <div class="overlay">
+            <div class="spinner-wrapper">
+                <app-spinner [isShow]="accountSandbox.quotationListLoading$ | async"></app-spinner>
+            </div>
+        </div>
+    </div>
+    <div class="mat-header-row">
+        <div class="mat-header-cell">{{'account.Products'|translate}}</div>
+        <div class="mat-header-cell">{{'account.CreatedDate'|translate}}</div>
+        <div class="mat-header-cell">{{'account.Quantity'|translate}}</div>
+        <div class="mat-header-cell">{{'account.QuantityUnit'|translate}}</div>
+        <div class="mat-header-cell">{{'account.OrderTotalValue'|translate}}</div>
+    </div>
+    <div class="no-data" *ngIf="(accountSandbox.quotationList$ | async).length === 0 && accountSandbox.quotationListLoaded$ | async">
+        <p>{{'account.NoRequestFound'|translate}}</p>
+    </div>
+    <ng-container *ngIf="(accountSandbox.quotationList$ | async).length > 0 && accountSandbox.quotationListLoaded$ | async">
+        <div *ngFor="let list of accountSandbox.quotationList$ | async; let i = index" class="mat-row">
+            <div class="mat-cell">{{list.name}}</div>
+            <div class="mat-cell">{{list.createdDate | date: 'dd/MM/yyyy'}}</div>
+            <div class="mat-cell">{{list.quantity}}</div>
+            <div class="mat-cell">{{list.quantityUnit}}</div>
+            <div class="mat-cell">{{list.orderValue}}</div>
+    
+        </div>
+    </ng-container>
+    <div  *ngIf="(accountSandbox.quotationList$ | async)?.length > 0" fxLayout="row wrap" class="page-wrap">
+        <div fxFlex="100">
+            <mat-card class="p-0 text-center">
+               <div class="flex pagination-wrap flex" *ngIf="(accountSandbox.quotationListCount$ | async) > limit">
+                 <p>{{'allproduct.page'|translate}} {{page}} {{'allproduct.of'|translate}} {{pageCount}}</p>
+                 <ngb-pagination  [collectionSize]="accountSandbox.quotationListCount$ | async" [(page)]="page" 
+                   [pageSize]="limit" [rotate]="true" [maxSize]="5" (pageChange)="pageEvent($event)">
+                   <ng-template ngbPaginationPrevious  >Prev</ng-template>
+                   <ng-template    ngbPaginationNext>{{'allproduct.next'|translate}}  </ng-template>
+                   
+                     </ngb-pagination>
+      
+                 </div>
+             </mat-card>
+       </div>
+   </div>
+</div>

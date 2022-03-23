@@ -1,0 +1,104 @@
+.swiper-btn {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    width: 100%;
+    .atc {
+        cursor: pointer;
+        width: 49%;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 2px;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        border: 0;
+        text-transform: capitalize;
+        img {
+            margin-right: 10px;
+            width: 16px;
+        }
+    }
+    .byn {
+        cursor: pointer;
+        width: 49%;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 2px;
+        background-color: #fb641c;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        border: 0;
+        text-transform: capitalize;
+        img {
+            margin-right: 10px;
+            width: 11px;
+        }
+    }
+}
+
+.request-button {
+    width: 100%;
+    margin-top: 16px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 2px;
+    background-color: #fff;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2874f0;
+    border: solid 1px #2874f0;
+}
+
+@media (max-width: 600px) {
+    .swiper-btn {
+        .atc {
+            height: 48px;
+            line-height: 48px;
+            font-size: 13px;
+            img {
+                width: 18px;
+            }
+        }
+        .byn {
+            height: 48px;
+            line-height: 48px;
+            font-size: 13px;
+        }
+        &.product-detail-button {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 -5px 5px rgba(0, 0, 0, 0.15);
+            button {
+                width: 50%;
+                border-radius: 0;
+            }
+        }
+    }
+}
+
+.byn-out-stock {
+    cursor: pointer;
+    width: 49%;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 2px;
+    background-color: white;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fb641c;
+    border: 1px solid #fb641c;
+    text-transform: capitalize;
+}

@@ -1,0 +1,153 @@
+<div class="flex wishlist-empty" *ngIf="(productControl.cartlistCount$ | async) == 0">
+
+
+    <h4>{{'ViewCart.shopping'|translate}}.</h4>
+
+    <a href="havascript:void(0)" [routerLink]="['/products/All']">{{'ViewCart.Continue'|translate}} </a>
+
+</div>
+
+<mat-card *ngIf="(productControl.cartlistCount$ | async) > 0" class="cart-card">
+
+    <h3 *ngIf="(productControl.cartlistCount$ | async) > 0" class="count-cart">{{'ViewCart.cart'|translate}}- {{(productControl.cartlistCount$ | async)}}</h3>
+
+
+    <div class="mat-table cart-table">
+        <div class="mat-header-row">
+            <div class="mat-header-cell mat-cell-images">{{'ViewCart.Product'|translate}}</div>
+            <div class="mat-header-cell mat-cell-products"></div>
+            <div class="mat-header-cell mat-cell-price">{{'ViewCart.Price'|translate}}</div>
+            <div class="mat-header-cell mat-cell-quantity">{{'ViewCart.Quantity'|translate}}</div>
+            <div class="mat-header-cell mat-cell-total">{{'ViewCart.SubTotal'|translate}}</div>
+            <div class="mat-header-cell text-center mat-cell-close">
+                <div>
+                    <button class="clear" mat-raised-button (click)="clear()">{{'ViewCart.ClearAll'|translate}}</button>
+                </div>
+            </div>
+        </div>
+        <div *ngFor="let product of productControl.cartlist$ | async ; let i= index" class="mat-row">
+            <div class="mat-cell mat-cell-images">
+
+                <img class="img-fixed-size" *ngIf="product.image && product.containerName !== ''" [src]="imagePath + '/' + product.containerName + '/' + product.image + '?tr=w-100,h-100'" onError="this.src='/assets/images/load_products.png';">
+
+                <img class="img-fixed-size" *ngIf="product.image && product.containerName === ''" [src]="imagePath+ '/' + product.containerName + '/' + product.image + '?tr=w-100,h-100'" onError="this.src='/assets/images/default_image.png';">
+                <img class="img-fixed-size" *ngIf="product.Images " [src]="imagePath + '/' + product['Images'].containerName + '/' + product['Images'].image + '?tr=w-100,h-100'" onError="this.src='/assets/images/default_image.png';">
+                <ng-container *ngIf="product.productImage && product.productImage.length >= 1">
+                    <ng-container *ngFor='let prodectDetailsImage of product.productImage'>
+
+                        <img *ngIf="prodectDetailsImage.defaultImage === 1" class="img-fixed-size" [src]="imagePath + '/' + prodectDetailsImage.containerName + '/' + prodectDetailsImage.image + '?tr=w-100,h-100'" onError="this.src='/assets/images/default_image.png';">
+                    </ng-container>
+                </ng-container>
+                <img [src]="imagePath + '/' + product.productImage.containerName + '/' + product.productImage.image + '?tr=w-100,h-100'" onError="this.src='/assets/images/default_image.png';" *ngIf="product.productImage && !product.productImage.length">
+            </div>
+            <div class="mat-cell mat-cell-products">
+                <a [routerLink]="['/products/productdetails', product.productSlug]" class="product-name">{{product.name}}</a>
+                <p class="product-subname">SKU <span>{{product.skuName}}</span>
+                    <ng-container *ngIf="product.isSimplified === 0">
+                        <span>{{product.variantName}}</span>
+                    </ng-container>
+                    <ng-container *ngFor="let data of product._optionValueArray">
+                        <p class="product-subname" *ngIf="data.name!=''">{{data.name}}<span>{{data.value}}</span><span *ngIf="data.type=='1'">(+ {{data.amount | currencysymbol: (listSandbox.symbolSetting$ | async)}})</span><span *ngIf="data.type=='0'">(- {{data.amount | currencysymbol: (listSandbox.symbolSetting$ | async)}})</span>                            </p>
+
+                    </ng-container>
+            </div>
+            <div class="mat-cell mat-cell-price">
+                <ng-container *ngIf="(product.pricerefer=='')&&(product.flag !=1)">
+                    <ng-container *ngIf="product.tirePrice !== ''">
+                        {{calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                    <ng-container *ngIf="product.tirePrice === ''">
+                        {{calculatePrice(product._totalOptions, product.price, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+
+                </ng-container>
+                <ng-container *ngIf="product.flag===0;else one">
+                    <ng-container *ngIf="product.tirePrice !== ''">
+                        {{calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                    <ng-container *ngIf="product.tirePrice === ''">
+                        {{calculatePrice(product._totalOptions, product.pricerefer, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                </ng-container>
+                <ng-template #one>
+                    <ng-container *ngIf="product.flag===1">
+                        <ng-container *ngIf="product.tirePrice !== ''">
+                            {{calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                        </ng-container>
+                        <ng-container *ngIf="product.tirePrice === ''">
+                            {{calculatePrice(product._totalOptions, product.pricerefer, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+
+                        </ng-container>
+                    </ng-container>
+                </ng-template>
+                <ng-container *ngIf="product.productPrice">
+                    <ng-container *ngIf="product.tirePrice !== ''">
+                        {{calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                    <ng-container *ngIf="product.tirePrice === ''">
+                        {{calculatePrice(product._totalOptions, product.price, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                </ng-container>
+                <p *ngIf="product.discount"> <span>{{calculateOriginalPrice(product.price, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}</span> {{product.discount}}% Off</p>
+            </div>
+            <div class="mat-cell mat-cell-quantity text-muted">
+                <div class="id-rw flex">
+                    <button mat-icon-button matTooltip="Remove" (click)="changeCount(product, false)" style="cursor: pointer"><mat-icon>remove</mat-icon></button>
+                    <span> {{product.productCount}} </span>
+                    <button mat-icon-button matTooltip="Add" (click)="changeCount(product, true)" style="cursor: pointer"><mat-icon>add</mat-icon></button>
+                </div>
+            </div>
+            <div class="mat-cell mat-cell-total" style="color:#0e0e0e">
+                <ng-container *ngIf="(product.pricerefer && product.pricerefer!='')" class="aaa">
+                    <ng-container *ngIf="product.tirePrice !== ''">
+                        {{((calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                    <ng-container *ngIf="product.tirePrice === ''">
+                        {{((calculatePrice(product._totalOptions, product.pricerefer, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="(product.pricerefer=='')" class="aab">
+                    <ng-container *ngIf="product.tirePrice !== ''">
+                        {{((calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                    <ng-container *ngIf="product.tirePrice === ''">
+                        {{((calculatePrice(product._totalOptions, product.price, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="(product.productPrice)" class="aac">
+                    <ng-container *ngIf="product.tirePrice !== ''">
+                        {{((calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                    <ng-container *ngIf="product.tirePrice === ''">
+                        {{(calculatePrice(product._totalOptions, product.productPrice, product.taxType, product.taxValue) * product.productCount) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                </ng-container>
+            </div>
+
+
+            <div class="mat-cell text-right mat-cell-close">
+                <div class="px-1">
+                    <button class="close" mat-mini-fab (click)="removeProduct(product)" matTooltip="{{'ViewCart.Clear'|translate}}">
+                              <mat-icon>close</mat-icon>
+                      </button>
+                </div>
+            </div>
+
+        </div>
+        <div class="mat-row mat-total-row">
+            <div class="mat-cell"><a [routerLink]="['/']" mat-raised-button color="primary">{{'ViewCart.Continue'|translate}}</a></div>
+            <div class="mat-cell"></div>
+
+            <div class="mat-cell">
+                <div fxLayout="column" fxLayoutAlign="center start" class="grand-total">
+
+                    <span class="new-price"><span class="new-price">{{'ViewCart.total'|translate}}: </span>{{ (productControl.totalCartPrice$ | async) | currencysymbol: (listSandbox.symbolSetting$ | async)}}</span>
+                </div>
+            </div>
+            <div class="mat-cellmat-cell-close text-right">
+                <a [routerLink]="['/checkout']" mat-raised-button class="checkout"> <img style="width: 20px; margin-left: 10px;" src="assets/img/checkout.svg">{{'ViewCart.Checkout'|translate}}</a>
+            </div>
+        </div>
+    </div>
+
+</mat-card>

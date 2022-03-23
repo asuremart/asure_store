@@ -1,0 +1,25 @@
+.breadcrumb{
+    padding: 13px 10.5px;
+    box-shadow: none;
+    margin-bottom: 16px;
+    justify-content: flex-start;
+    align-items: center;
+    .breadcrumb-icon {
+        margin-right: 14px;
+    }
+    a, span{
+        text-decoration: none;
+    }
+    .breadcrumb-item {
+        margin-top: 2px;
+    }
+    .breadcrumb-title.active{
+        text-transform: uppercase;
+    }
+    .breadcrumb-item+.breadcrumb-item:before{
+        display: inline-block;
+        padding-right: .2rem;
+        padding-left: .2rem;
+        content: "»";
+    }
+}

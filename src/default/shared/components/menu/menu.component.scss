@@ -1,0 +1,45 @@
+.colorMenu {
+  color: white;
+  
+}
+.menu-column {
+  padding: 16px 24px 0;
+  .mat-menu-item.matMenuTitle {
+    line-height: 18px;
+    margin-bottom: 7px;
+    background: none;
+    &:hover {
+      background: transparent;
+    }
+   
+  }
+  .mat-menu-item {
+    line-height: 18px;
+    margin-bottom: 7px;
+    &:hover {
+      background: transparent;
+    }
+    &:active{
+      background-color: transparent !important;
+    }
+  }
+  &:nth-child(even) {
+    background: #f9f9f9;
+  }
+ 
+ 
+}
+.mat-button ::ng-deep .mat-button-focus-overlay {
+  display: none;
+}
+
+::ng-deep .mega-overlay{
+  top: 104px;
+  left: 0 !important;
+  right: 0 !important;
+  max-height: 500px;
+  width: 1259.72px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 0 auto ;
+}

@@ -1,0 +1,458 @@
+<mat-card fxLayout="row wrap" fxLayoutAlign="space-between">
+    <form [formGroup]="checkoutForm" novalidate style="width:100%" class="checkout-wrp">
+
+        <div fxFlex="100" fxFlex.gt-sm="50" class="p-2 billing-address">
+
+            <h2 class="text-dark">{{'checkout.FillYourInfo'|translate}}</h2>
+
+            <div class="ba-row checkout-row">
+                <div class="flex custom-field mb-2">
+                    <input type="text" placeholder="{{'checkout.FirstName'|translate}} *" formControlName="firstName" [ngClass]="{'validationcolor':checkoutForm.controls['firstName'].hasError('required')&&submitted}">
+                    <mat-error *ngIf="checkoutForm.controls['firstName'].hasError('required')&&submitted">
+                        {{'Error.FirstNameIsRequired'|translate}}
+                    </mat-error>
+                    <mat-error *ngIf="((checkoutForm['controls'].firstName.hasError('minlength'))&&submitted)">
+                        {{'Error.FirstNameLong'|translate}}
+                    </mat-error>
+                </div>
+
+                <div class="flex custom-field mb-2">
+                    <input type="text" placeholder="{{'checkout.LastName'|translate}}" formControlName="lastName">
+                    <mat-error *ngIf="checkoutForm.controls['lastName'].hasError('required')&&submitted">
+                        {{'Error.LastNameIsRequired'|translate}}
+                    </mat-error>
+                </div>
+                <div class="flex custom-field mb-2">
+                    <input type="text" placeholder="{{'checkout.Email'|translate}} *" formControlName="email" [ngClass]="{'validationcolor':checkoutForm.controls['email'].hasError('required')&&submitted}">
+                    <mat-error *ngIf="checkoutForm.controls['email'].hasError('required')&&submitted">
+                        {{'Error.EmailIsRequired'|translate}}
+                    </mat-error>
+                    <mat-error *ngIf="checkoutForm.controls['email'].hasError('invalidEmail')&&submitted">
+                        {{'Error.EmailMustBeValid'|translate}}
+                    </mat-error>
+                </div>
+                <div class="flex custom-field mb-2">
+                    <input type="text" placeholder="{{'checkout.Phone'|translate}} *" maxlength="10" appOnlyNumber formControlName="phone" [ngClass]="{'validationcolor':checkoutForm.controls['email'].hasError('required')&&submitted}">
+                    <mat-error *ngIf="(checkoutForm.controls['phone'].hasError('required')&&submitted)||(checkoutForm.controls['phone'].hasError('pattern')&&submitted)">
+                        {{'Error.PhoneIsRequired'|translate}}
+                    </mat-error>
+                </div>
+
+
+
+                <div style="background: #F8FBFF;" class="crt-act">
+                    <div fxLayout="column">
+                        <mat-checkbox color="primary" id="2" (change)="gstAvailable($event)">{{'checkout.AddGstNumber'|translate}}</mat-checkbox>
+                    </div>
+                    <div class="" *ngIf="isGstAvailable">
+                        <div class="flex custom-field mb-2">
+                            <input matInput formControlName="gst" placeholder="GST Number *" [ngClass]="{'validationcolor': !checkoutForm.controls['gst'].valid && submitted}">
+                            <mat-error *ngIf="(checkoutForm.controls['gst'].hasError('required')&&submitted)">
+                                {{'Error.GSTNumberIsRequired'|translate}}
+                            </mat-error>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="background: #F8FBFF;" class="flex crt-act" *ngIf="!hideAddress">
+                    <div fxLayout="column">
+                        <mat-checkbox color="primary" id="1" *ngIf="((commonSandbox.getProfileValid$ | async)!=true || (authSandbox.userTokenValid$ | async)!=true)" (change)="accountCreated($event)">{{'checkout.CreateAccount'|translate}}</mat-checkbox>
+                    </div>
+                </div>
+                <div class="" *ngIf="createAccount">
+                    <div class="flex custom-field mb-2">
+                        <input matInput type="password" minlength="5" formControlName="setPassword" placeholder="{{'checkout.Password'|translate}} *" [ngClass]="{'validationcolor': !checkoutForm.controls['setPassword'].valid && submitted}">
+                        <mat-error *ngIf="(checkoutForm.controls['setPassword'].hasError('required')&&submitted)">
+                            {{'Error.setPassword'|translate}}
+                        </mat-error>
+                        <mat-error *ngIf="(checkoutForm.controls['setPassword'].hasError('minlength') && submitted)">
+                            {{'Error.PasswordLong'|translate}}
+                        </mat-error>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="showAddresses==true">
+
+                    <h2 class="text-dark">{{'checkout.ShippingAddress'|translate}}</h2>
+                    <div class="flex custom-field mb-2">
+                        <input type="text" placeholder="Name *" formControlName="shippingName" [ngClass]="{'validationcolor':checkoutForm.controls['shippingName'].hasError('required')&&submitted}">
+                        <mat-error *ngIf="checkoutForm.controls['shippingName'].hasError('required')&&submitted">
+                            {{'Error.NameIsRequired'|translate}}
+                        </mat-error>
+                    </div>
+
+                    <div class="flex custom-field mb-2">
+                        <input type="text" placeholder="Address (street,apartment,suite,unit,etc) *" formControlName="address" ng-pattern="/^[a-zA-Z. ]*[a-zA-Z]{1,60}$/" [ngClass]="{'validationcolor':checkoutForm.controls['address'].hasError('required')&&submitted}">
+                        <mat-error *ngIf="checkoutForm.controls['address'].hasError('required')&&submitted">
+                            {{'Error.AddressIsRequired'|translate}}
+                        </mat-error>
+                    </div>
+                    <div class="flex custom-field mb-2">
+                        <input type="text" placeholder="Address Line 1" formControlName="addressLine">
+                    </div>
+                    <div class="flex custom-field mb-2">
+
+                        <div class="width-inline">
+                            <ng-select formControlName="country" (change)="selectCountry($event)" [ngClass]="{'validationcolor': !checkoutForm.controls['country'].valid && submitted}">
+                                <ng-option value="">{{'checkout.selectCountry'|translate}}</ng-option>
+                                <ng-option *ngFor="let list of listsSandbox.countryList$ | async" [value]="list.countryId">
+                                    {{list.name}}
+                                </ng-option>
+
+                            </ng-select>
+                            <mat-error *ngIf="checkoutForm.controls['country'].hasError('required')&&submitted">
+                                {{'Error.CountryIsRequired'|translate}}
+                            </mat-error>
+                        </div>
+                        <div class="width-inline" *ngIf="countryId !== 99">
+                            <input type="text" placeholder="State/Province *" formControlName="state" [ngClass]="{'validationcolor':checkoutForm.controls['state'].hasError('required')&&submitted}">
+                            <mat-error *ngIf="checkoutForm.controls['state'].hasError('required')&&submitted">
+                                {{'Error.StateIsRequired'|translate}}
+                            </mat-error>
+                        </div>
+                        <div class="width-inline" *ngIf="countryId === 99">
+                            <ng-select placeholder="Select State" formControlName="state" [ngClass]="{'validationcolor': !checkoutForm.controls['state'].valid && submitted}">
+                                <ng-option value="">Select State</ng-option>
+                                <ng-option *ngFor="let list of listsSandbox.zoneList$ | async" [value]="list.name">
+                                    {{list.name}}
+                                </ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="checkoutForm.controls['state'].hasError('required')&&submitted">
+                                {{'Error.StateIsRequired'|translate}}
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="flex custom-field mb-2">
+
+                        <div class="width-inline">
+                            <input type="text" placeholder="City *" formControlName="city" (keypress)="onlyText($event)" [ngClass]="{'validationcolor':checkoutForm.controls['city'].hasError('required')&&submitted}">
+                            <mat-error *ngIf="checkoutForm.controls['city'].hasError('required')&&submitted">
+                                {{'Error.CityIsRequired'|translate}}
+                            </mat-error>
+                        </div>
+                        <div class="width-inline">
+                            <input type="text" placeholder="Zip/Postal Code *" maxlength="6" appOnlyNumber formControlName="zip" [ngClass]="{'validationcolor':checkoutForm.controls['zip'].hasError('required')&&submitted}">
+                            <mat-error *ngIf="checkoutForm.controls['zip'].hasError('required')&&submitted">
+                                {{'Error.ZipIsRequired'|translate}}
+                            </mat-error>
+                        </div>
+
+
+                    </div>
+                    <div class="flex crt-act">
+                        <div fxLayout="column">
+                            <mat-checkbox color="primary" id="billStatus" (change)="billingAddressEventChange($event)" formControlName="sameAsBilling">{{'checkout.BillToSame'|translate}}</mat-checkbox>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="!checkoutForm.controls['sameAsBilling'].value">
+                        <h2 class="text-dark">{{'checkout.BillingAddress'|translate}}</h2>
+                        <div class="flex custom-field mb-2">
+                            <input type="text" placeholder="Name *" formControlName="billingName" [ngClass]="{'validationcolor':checkoutForm.controls['billingName'].hasError('required')&&submitted}">
+                            <mat-error *ngIf="checkoutForm.controls['billingName'].hasError('required')&&submitted">
+                                {{'Error.NameIsRequired'|translate}}
+                            </mat-error>
+                        </div>
+                        <div class="flex custom-field mb-2">
+                            <input type="text" placeholder="Address (street,apartment,suite,unit,etc) *" formControlName="billingAddress" ng-pattern="/^[a-zA-Z. ]*[a-zA-Z]{1,60}$/" [ngClass]="{'validationcolor':checkoutForm.controls['billingAddress'].hasError('required')&&submitted}">
+                            <mat-error *ngIf="checkoutForm.controls['billingAddress'].hasError('required')&&submitted">
+                                {{'Error.AddressIsRequired'|translate}}
+                            </mat-error>
+                        </div>
+                        <div class="flex custom-field mb-2">
+                            <input type="text" placeholder="Address Line 1" formControlName="billingAddressLine">
+                        </div>
+                        <div class="flex custom-field mb-2">
+                            <div class="width-inline">
+                                <input type="text" placeholder="City *" formControlName="billingCity" [ngClass]="{'validationcolor':checkoutForm.controls['billingCity'].hasError('required')&&submitted}">
+                                <mat-error *ngIf="checkoutForm.controls['billingCity'].hasError('required')&&submitted">
+                                    {{'Error.CityIsRequired'|translate}}
+                                </mat-error>
+                            </div>
+                            <div class="width-inline" *ngIf="countryId !== 99">
+                                <input type="text" placeholder="State/Province *" formControlName="billingState" [ngClass]="{'validationcolor':checkoutForm.controls['billingState'].hasError('required')&&submitted}">
+                                <mat-error *ngIf="checkoutForm.controls['billingState'].hasError('required')&&submitted">
+                                    {{'Error.StateIsRequired'|translate}}
+                                </mat-error>
+                            </div>
+                            <div class="width-inline" *ngIf="countryId === 99">
+                                <ng-select formControlName="billingState" [ngClass]="{'validationcolor': !checkoutForm.controls['billingState'].valid && submitted}">
+                                    <ng-option value="">Select State</ng-option>
+                                    <ng-option *ngFor="let list of listsSandbox.zoneList$ | async" [value]="list.name">
+                                        {{list.name}}
+                                    </ng-option>
+                                </ng-select>
+                                <mat-error *ngIf="checkoutForm.controls['billingState'].hasError('required')&&submitted">
+                                    {{'Error.StateIsRequired'|translate}}
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div class="flex custom-field mb-2">
+                            <div class="width-inline">
+                                <input type="text" placeholder="Zip/Postal Code *" maxlength="6" appOnlyNumber formControlName="billingZip" [ngClass]="{'validationcolor':checkoutForm.controls['billingZip'].hasError('required')&&submitted}">
+                                <mat-error *ngIf="checkoutForm.controls['billingZip'].hasError('required')&&submitted">
+                                    {{'Error.ZipIsRequired'|translate}}
+                                </mat-error>
+                            </div>
+                            <div class="width-inline">
+                                <ng-select formControlName="billingCountry" (change)="selectCountry($event)" [ngClass]="{'validationcolor': !checkoutForm.controls['billingCountry'].valid && submitted}">
+                                    <ng-option value="">{{'checkout.selectCountry'|translate}}</ng-option>
+                                    <ng-option *ngFor="let list of listsSandbox.countryList$ | async" [value]="list.countryId">
+                                        {{list.name}}
+                                    </ng-option>
+
+                                </ng-select>
+                                <mat-error *ngIf="checkoutForm.controls['billingCountry'].hasError('required')&&submitted">
+                                    {{'Error.CountryIsRequired'|translate}}
+                                </mat-error>
+                            </div>
+
+                        </div>
+                    </ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="(accountSandbox.getCustAddressList$| async)?.length > 0">
+                    <h2 *ngIf="hideAddress" class="text-dark select-address">{{'checkout.SelectShippingAddress'|translate}}
+                        <a href="javascript:void(0)" (click)="addNewAddress()"> <span class="material-icons" style="color: black;float: left;">add</span> {{'checkout.AddNewAddress'|translate}} </a>
+                    </h2>
+                </ng-container>
+
+
+
+                <div class="address  " *ngIf="hideAddress">
+                    <ng-container *ngIf="(accountSandbox.getCustAddressList$| async)?.length > 0">
+                        <mat-radio-group aria-label="Select an option">
+                            <mat-radio-button [class.add-atv]="address.addressId === activeAdressId" *ngFor="let address of accountSandbox.getCustAddressList$| async;let i=index" (change)="selectAddress($event.value)" [value]="address">
+                                <h4 *ngIf="address.addressType==1">{{'checkout.Home'|translate}}</h4>
+                                <h4 *ngIf="address.addressType==0">{{'checkout.Work'|translate}}</h4>
+                                <p>{{address.address1}} {{address.address2}} {{address.city}} {{address.state}} {{address.postcode}}
+                                </p>
+                                <span class="add-edt" (click)="editAddress(address)">{{'checkout.Edit'|translate}}</span>
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <mat-error *ngIf="checkoutForm.controls['address'].hasError('required')&&submitted&&newAddress">
+                            {{'Error.SelectOneOfTheseAddress'|translate}}
+                        </mat-error>
+                        <div class="flex crt-act">
+                            <div fxLayout="column">
+                                <mat-checkbox color="primary" id="billStatus" (change)="billingAddressEventChange($event)" formControlName="sameAsBilling">{{'checkout.BillToSameAddress'|translate}}</mat-checkbox>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="!checkoutForm.controls['sameAsBilling'].value">
+                            <h2 *ngIf="hideAddress" class="text-dark select-address">{{'checkout.SelectBillingAddress'|translate}}</h2>
+                            <mat-radio-group aria-label="Select an option">
+                                <mat-radio-button [class.add-atv]="address.addressId === activeBillingAddressId" *ngFor="let address of accountSandbox.getCustAddressList$| async;let i=index" (change)="selectBillingAddress($event.value)" [value]="address">
+                                    <h4 *ngIf="address.addressType==1">{{'checkout.Home'|translate}}</h4>
+                                    <h4 *ngIf="address.addressType==0">{{'checkout.Work'|translate}}</h4>
+                                    <p>{{address.address1}} {{address.address2}} {{address.city}} {{address.state}} {{address.postcode}}
+                                    </p>
+                                </mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="checkoutForm.controls['billingAddress'].hasError('required')&&submitted&&newAddress">
+                                {{'Error.SelectOneOfTheseAddress'|translate}}
+                            </mat-error>
+                        </ng-container>
+                    </ng-container>
+
+                    <ng-container *ngIf="(accountSandbox.getCustAddressList$| async)?.length === 0">
+
+                        <div *ngIf="(accountSandbox.login$| async)?.status === 1 && !currentUser">
+                            <div class="flex crt-act">
+                                <div fxLayout="column">
+                                    <mat-checkbox color="primary">{{'checkout.CreateAccount'|translate}}</mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex add-addr">
+                            <a href="javascript:void(0)" (click)="addNewAddress()"> <span class="material-icons">add</span> {{'checkout.AddShippingAddress'|translate}}</a>
+
+                        </div>
+                        <mat-error *ngIf="checkoutForm.controls['address'].hasError('required')&&submitted&&newAddress">
+                            {{'Error.PleaseAddShippingAddressFirst'|translate}}
+                        </mat-error>
+                    </ng-container>
+                </div>
+
+
+
+
+
+                <div class="address  " *ngIf="hideAddress">
+                    <ng-container *ngIf="(accountSandbox.getCustAddressList$| async)?.length === 0">
+
+
+                        <div class="flex add-addr">
+                            <a style="background: none !important;" href="javascript:void(0)" (click)="addNewAddress()"> <span class="material-icons">add</span>{{'checkout.AddBillingAddress'|translate}} </a>
+                        </div>
+
+                        <mat-error *ngIf="checkoutForm.controls['address'].hasError('required')&&submitted&&newAddress">
+                            {{'Error.PleaseAddShippingAddressFirst'|translate}}
+                        </mat-error>
+                    </ng-container>
+                </div>
+
+
+
+            </div>
+
+        </div>
+        <!---->
+        <div fxFlex="100" fxFlex.gt-sm="50" class="pt-2 items-in-cart" ngClass.sm="mt-2" ngClass.xs="mt-2" ngClass="billing-address">
+            <h2 class="text-dark">{{'checkout.ItemsinCart'|translate}} - {{productControlSandbox.cartlistCount$ | async}} <a href="javascript:void(0)" class="ct-btn" [routerLink]="['/cart']">{{'checkout.ViewCart'|translate}}</a>
+            </h2>
+            <div class="item-table">
+                <table class="table" cellspacing="0" cellpadding="0" *ngIf="(productControlSandbox.cartlistCount$ | async) > 0">
+                    <tr class="total" *ngFor="let products of productControlSandbox.cartlist$ | async; let i = index">
+                        <td width="80px">
+                            <img *ngIf="products.image && products.containerName === ''" [src]="imagePath + '/' + products.containerName + '/' + products.image + '?tr=w-60,h-60'" onError="this.src='/assets/images/load_products.png';">
+                            <img *ngIf="products.image && products.containerName !== ''" [src]="imagePath + '/' + products.containerName + '/' + products.image + '?tr=w-60,h-60'" onError="this.src='/assets/images/load_products.png';">
+
+                            <img *ngIf="products.Images" [src]="imagePath + '/' + products['Images'].containerName + '/'+ products['Images'].image + '?tr=w-60,h-60'" onError="this.src='/assets/images/load_products.png';">
+                            <div *ngIf="products.productImage ">
+                                <div *ngFor='let prodectDetailsImage of products.productImage'>
+                                    <img *ngIf="prodectDetailsImage.defaultImage === 1" [src]="imagePath + '/' + prodectDetailsImage.containerName + '/' + prodectDetailsImage.image + '?tr=w-60,h-60'" onError="this.src='/assets/images/load_products.png';">
+                                </div>
+                            </div>
+                            <img [src]="imagePath + '/' + products.productImage.containerName + '/' + products.productImage.image + '?tr=w-60,h-60'" *ngIf="products.productImage && !products.productImage.length" onError="this.src='/assets/images/load_products.png';">
+                        </td>
+                        <td colspan="2">
+                            <a style="float: right;" href="javascript:void(0)" class="close-btn-outer" (click)="removeProduct(products)">
+                x </a>
+                            <a class="product-name ">{{products.name}}</a>
+                            <div class="flex td-roe">
+                                <p class="product-subname ">SKU <span>{{products.skuName}}</span>
+                                    <ng-container *ngIf="products.isSimplified === 0">
+                                        <span>{{ ' ' + products.variantName}}</span>
+                                    </ng-container>
+                                    <ng-container *ngFor="let data of products._optionValueArray">
+                                        <p class="product-subname" *ngIf="data.name!=''">{{data.name}}<span>{{data.value}}</span><span *ngIf="data.type=='1'">(+
+                        {{data.amount | currencysymbol: (listsSandbox.symbolSetting$ | async)}})</span><span *ngIf="data.type=='0'">(-
+                        {{data.amount | currencysymbol: (listsSandbox.symbolSetting$ | async)}})</span> </p>
+
+                                    </ng-container>
+
+                                    <div class="id-rw flex">
+                                        <button mat-icon-button matTooltip="Remove" type="button" (click)="changeCount(products, false)">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                                        <span> {{products.productCount}} </span>
+                                        <button mat-icon-button matTooltip="Add" type="button" (click)="changeCount(products, true)">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                                    </div>
+
+                                    <ng-container *ngIf="(products.pricerefer) && (products.pricerefer != '')">
+                                        <ng-container *ngIf="products.tirePrice !== ''">
+                                            {{(calculatePrice(products._totalOptions, products.tirePrice, products.taxType, products.taxValue) * products.productCount).toFixed(2) | currencysymbol: (listsSandbox.symbolSetting$ | async)}}
+                                        </ng-container>
+
+                                        <ng-container *ngIf="products.tirePrice === ''">
+                                            {{(calculatePrice(products._totalOptions, products.pricerefer, products.taxType, products.taxValue) * products.productCount).toFixed(2) | currencysymbol: (listsSandbox.symbolSetting$ | async)}}
+                                        </ng-container>
+                                    </ng-container>
+                                    <ng-container *ngIf="(products.pricerefer == '')">
+                                        <ng-container *ngIf="products.tirePrice !== ''">
+                                            {{(calculatePrice(products._totalOptions, products.tirePrice, products.taxType, products.taxValue) * products.productCount).toFixed(2) | currencysymbol: (listsSandbox.symbolSetting$ | async)}}
+                                        </ng-container>
+
+                                        <ng-container *ngIf="products.tirePrice === ''">
+                                            {{(calculatePrice(products._totalOptions, products.price, products.taxType, products.taxValue) * products.productCount).toFixed(2) | currencysymbol: (listsSandbox.symbolSetting$ | async)}}
+                                        </ng-container>
+                                    </ng-container>
+                                    <ng-container *ngIf="!(products.pricerefer) && products.productPrice">
+
+                                        <ng-container *ngIf="products.tirePrice !== ''">
+                                            {{(calculatePrice(products._totalOptions, products.tirePrice, products.taxType, products.taxValue) * products.productCount) | currencysymbol: (listsSandbox.symbolSetting$ | async)}}
+                                        </ng-container>
+
+                                        <ng-container *ngIf="products.tirePrice === ''">
+                                            {{(calculatePrice(products._totalOptions, products.productPrice, products.taxType, products.taxValue) * products.productCount) | currencysymbol: (listsSandbox.symbolSetting$ | async)}}
+                                        </ng-container>
+
+                                    </ng-container>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="total total-amount" *ngIf="productControlSandbox.totalCartPrice$">
+                        <td class="left-txt" colspan="2"> {{'checkout.Total'|translate}} </td>
+                        <td class="text-right" style="white-space: nowrap;" colspan="2">
+                            {{(productControlSandbox.totalCartPrice$ | async) | currencysymbol: (listsSandbox.symbolSetting$ | async)}}
+                        </td>
+                    </tr>
+                    <tr class="total dis-amount" *ngIf="(productControlSandbox.applyCouponDataLoaded$ | async) && (productControlSandbox.applyCouponData$ | async)?.data?.appliedProducts?.length > 0 && !clearCoupon">
+                        <td class="left-txt" colspan="2"> {{'checkout.DiscountAmount'|translate}}
+                            <p>Coupons, Vouchers & Promotional</p>
+                        </td>
+                        <td class="text-right" style="white-space: nowrap;" colspan="2"> (-) {{(productControlSandbox.applyCouponData$ | async)?.data?.grandDiscountAmount | currencysymbol: (listsSandbox.symbolSetting$ | async)}}
+                        </td>
+                        <td class="text-right"><a href="javascript:void(0)" class="close-btn-outer" (click)="removeDiscount()"> x
+              </a> </td>
+                    </tr>
+
+                    <tr class="total total-amount" *ngIf="((productControlSandbox.applyCouponDataLoaded$ | async) && (productControlSandbox.applyCouponData$ | async)?.data?.appliedProducts?.length > 0 && !clearCoupon)">
+                        <td class="text-right" colspan="4">{{'checkout.TotalAmountPayable'|translate}}
+                            <b>{{ (calculateGrandTotal((productControlSandbox.totalCartPrice$ | async)?.toFixed(2),
+                  (productControlSandbox.applyCouponData$ | async)?.data?.grandDiscountAmount)) | currencysymbol:
+                  (listsSandbox.symbolSetting$ | async)}}</b>
+                        </td>
+                        <td class="text-right"> </td>
+                    </tr>
+                </table>
+            </div>
+
+            <mat-accordion displayMode="flat" multi="false" *ngIf="(productControlSandbox.cartlistCount$ | async) > 0 && productControlSandbox.cartlist$ | async as productDetails">
+                <mat-expansion-panel expanded>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <h4>{{'checkout.couponsHeader'|translate}}</h4>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="categories-wrapper categories-dropdown" perfectScrollbar>
+                        <p>{{'checkout.couponLabel'|translate}}</p>
+                        <div class="promtional-cards-row">
+                            <div class="flex pc-lft">
+                                <input type="text" #coupon [(ngModel)]="couponCode" placeholder="{{'placeholder.coupon'|translate}} " [ngModelOptions]="{standalone: true}" (keydown.enter)="preventData($event)" [ngClass]="{'validationcolor':couponCode === '' && submittedCoupon}">
+                                <button type="button" [disabled]="disable" [ngClass]="{'loader' : (productControlSandbox.applyCouponDataLoading$ | async)}" (click)="applyCoupon(productDetails)" style="cursor: pointer">{{'checkout.Apply'|translate}}</button>
+                                <h5 class="flex" *ngIf="(productControlSandbox.applyCouponDataLoaded$ | async) && (productControlSandbox.applyCouponData$ | async)?.status === 1 && !clearCoupon">
+                                    <img src="assets/images/tick-green.svg">{{'checkout.CouponApplied'|translate}}
+                                </h5>
+
+                            </div>
+                            <div *ngIf="couponCode === '' && submittedCoupon " style="color: red;">Please enter the coupon code</div>
+
+
+
+                            <a href="javascript:Void(0)" class="vdd" *ngIf="viewAllAppliedProduct">{{'checkout.ViewDiscountDetails'|translate}}</a>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <div class="mode-pay" *ngIf="calculateGrandTotal((productControlSandbox.totalCartPrice$ | async)?.toFixed(2), (productControlSandbox.applyCouponData$ | async)?.data?.grandDiscountAmount) > 0">
+                <p>{{'checkout.SelectPaymentMode'|translate}}</p>
+                <div class="aopsc-rt mode-group">
+                    <mat-radio-group aria-label="Select an option" formControlName="paymentMethod">
+                        <mat-radio-button *ngFor="let modes of productControlSandbox.paymentMode$ | async" [value]="modes.id">
+                            <img [src]="imagePath + '/' + modes.pluginAvatarPath + '/' + modes.pluginAvatar + '?tr=w-100,h-100'">
+                        </mat-radio-button>
+                    </mat-radio-group>
+                    <mat-error *ngIf="checkoutForm.controls['paymentMethod'].hasError('required')&&submitted">
+                        {{'Error.SelectOneOfThesePayment'|translate}}
+                    </mat-error>
+                </div>
+                <h2 class="text-dark" style="font-weight: bold;">Pay through Account Details</h2>
+                <p>Account Name: Asuremart Pvt Ltd</p>
+                <p>Account no: 50200056057333</p>
+                <p>IFSC code: HDFC0001858</p>
+                <a href="javascript:void(0)" (click)="openWhatsAppLink()" style="margin-right: 10px"><img src="assets/images/others/whatsapp.png"> Send payment screnshots</a>
+            </div>
+            <div class="place-order flex" *ngIf="productControlSandbox.cartlist$ | async as productDetails">
+                <button style="cursor:pointer" (click)="placeOrder(productDetails)">
+          <i *ngIf="productControlSandbox.checkoutLoading$ | async" class="fa fa-spinner fa-spin"
+            style="font-size:24px"></i>
+          {{'checkout.PlaceOrder'|translate}}</button>
+            </div>
+
+        </div>
+    </form>
+</mat-card>

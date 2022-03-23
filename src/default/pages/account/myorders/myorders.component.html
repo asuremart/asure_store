@@ -1,0 +1,273 @@
+<div class="flex order-title">
+    <h3>{{'account.OrderHistory'|translate}}</h3>
+    <div class="flex order-search">
+        <input type="text" style="margin-right:15px;" #todo (keyup.enter)="search($event.target.value)">
+        <button mat-raised-button type="button" style="margin-right:5px;" (click)="search(todo.value)">{{'account.SearchOrder'|translate}}</button>
+        <span>
+                <button class="reset" mat-raised-button type="button" (click)="reset()">{{'account.Reset'|translate}}</button>   
+            </span>
+    </div>
+</div>
+
+<div class="tabs-wrapper">
+    <input (click)="tabsChange('closed')" type="radio" name="tab" id="tab1" class="tab-head1" />
+    <label for="tab1">{{'account.ClosedOrders'|translate}}</label>
+    <input (click)="tabsChange('opened')" type="radio" name="tab" id="tab3" class="tab-head3" checked="checked" />
+    <label for="tab3">{{'account.OpenedOrders'|translate}}</label>
+    <input type="radio" name="tab" id="tab4" class="tab-head4" />
+    <label (click)="tabsChange('cancelled')" for="tab4">{{'account.CancelledOrders'|translate}}</label>
+    <div class="tab-body-wrapper">
+
+
+        <div id="tab-body-1" class="tab-body">
+            <div class="text-center" *ngIf="(sandbox.orderList$ | async).length === 0 && (sandbox.orderListLoaded$ | async)" style="margin-top: 140px">
+                {{'account.NoItem'|translate}}</div>
+
+
+            <div class="spinner-wrapper">
+                <app-spinner [isShow]="sandbox.orderListLoading$ | async"></app-spinner>
+            </div>
+            <div class="flex ord-plc-select">
+            </div>
+
+
+            <div class="orderhistory-row" *ngFor="let list of sandbox.orderList$ | async">
+                <div class="ohr-head flex">
+                    <div class="flex ohrh-lft ">
+                        <div class="ohr-group">
+                            <p>{{'account.OrderPlaced'|translate}} </p>
+                            <h4>{{list.createdDate| date: 'dd/MM/yyyy'}}</h4>
+                        </div>
+                        <div class="ohr-group">
+                            <p>{{'account.Total'|translate}}</p>
+                            <h4>{{list?.currencySymbolLeft}} {{list.total ? list.total : 0}} {{list?.currencySymbolRight}}</h4>
+                        </div>
+                        <div class="ohr-group">
+                            <p>{{'account.ShipTo'|translate}}</p>
+                            <p>{{list.shippingAddress1}},</p>
+                            <p>{{list.shippingCity}},</p>
+                            <p>{{list.shippingPostcode}}</p>
+                        </div>
+                    </div>
+                    <div class="ohr-group">
+                        <p>{{'account.OrderID'|translate}} : #{{list.orderProductPrefixId}}</p>
+                        <div class="select">
+                            <p><i *ngIf="(sandbox.downloadInvoiceLoading$ | async) && id === list.orderProductId" class="fa fa-refresh fa-spin"></i>
+                                <a (click)="list.cancelRequestStatus === 1? false : downloadInvoice(list.orderProductId)" style="cursor: pointer;">{{'account.Invoice'|translate}}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--head-->
+                <div class="ohr-content">
+                    <h4>{{'account.Delivered'|translate}} {{list.deliveryDate|date: 'dd MMMM yy'}}</h4>
+                    <div class="ohrc-row flex">
+                        <div class="ohrcr-left flex">
+                            <div class="ohrcr-img">
+                                <img [src]="imageUrl + '/' + list.containerName + '/' + list.image+'?tr=w-200,h-200' ">
+                            </div>
+                            <div class="ohrcr-cnt">
+                                <div class="flex ohrcr-cnt-top">
+                                    <h3> <a href="javascript:void(0)">{{list.productName}}</a> </h3>
+                                </div>
+                                <div class="flex ohrcr-cnt-bt">
+                                    <button style="cursor: pointer;" [routerLink]="['/products/productdetails', list.productSlug]">{{'account.BuyItAgain'|translate}}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!--left-->
+                        <div class="ohrc-right">
+                            <button [routerLink]="list.cancelRequestStatus !== 1? ['/account/track', list.orderProductId] : []" style="cursor: pointer;">{{'account.TrackOrder'|translate}} <img src="assets/images/others/arrow-right.svg"> </button>
+                            <button matTooltip="this feature will be available in upcoming version">{{'account.Documents'|translate}} <img src="assets/images/others/arrow-right.svg"> </button>
+                            <button [routerLink]="list.cancelRequestStatus !== 1? ['/account/order-details', list.orderProductId] : []" style="cursor: pointer;">{{'account.OrderDetails'|translate}} <img src="assets/images/others/arrow-right.svg"> </button>
+                            <button *ngIf="list.cancelRequest === 0z" (click)="cancelOrder(list)" style="cursor: pointer;"> {{'account.CancelOrder'|translate}} <img src="assets/images/others/arrow-right.svg"> </button>
+                            <p style="margin-left:9px !important; color: #2774F0;" *ngIf="list.cancelRequest === 1 && list.cancelRequestStatus === 0">{{'account.CancelOrderPending'|translate}}.</p>
+                            <p style="margin-left:9px !important; color: #2774F0;" *ngIf="list.cancelRequestStatus === 1" style="color: red">{{'account.CancelOrderCancelled'|translate}}.</p>
+                            <p style="margin-left:9px !important; color: #2774F0;" *ngIf="list.cancelRequestStatus === 2">{{'account.CancelOrderRejected'|translate}}.</p>
+                        </div>
+                    </div>
+                </div>
+                <!--content-->
+
+                <!--content-->
+            </div>
+            <!--row-->
+
+
+            <!--row-->
+
+        </div>
+        <!--Open Orders-->
+
+
+        <!--Buy Again-->
+
+        <div id="tab-body-3" class="tab-body review-tab-body">
+
+            <div class="text-center" *ngIf="(sandbox.orderList$ | async).length === 0 && (sandbox.orderListLoaded$ | async)" style="margin-top: 140px">
+                {{'account.NoItem'|translate}}</div>
+            <div class="spinner-wrapper">
+                <app-spinner [isShow]="sandbox.orderListLoading$ | async"></app-spinner>
+            </div>
+
+            <div class="flex ord-plc-select" *ngIf="sandbox.orderListLoaded$|async">
+            </div>
+
+            <div class="orderhistory-row" *ngFor="let list of sandbox.orderList$ | async">
+                <div class="ohr-head flex">
+                    <div class="ohr-group">
+                        <p>{{'account.OrderPlaced'|translate}} </p>
+                        <h4>{{list.createdDate| date: 'dd/MM/yyyy'}}</h4>
+                    </div>
+                    <div class="ohr-group">
+                        <p>{{'account.Total'|translate}}</p>
+                        <h4>{{list.total | currencysymbol: (list.currencySymbolLeft ? {'position': 'left', symbol: list.currencySymbolLeft} : list.currencySymbolRight? {position: 'right' , symbol: list.currencySymbolRight}: null)}}
+                        </h4>
+                    </div>
+                    <div class="ohr-group">
+                        <p>{{'account.ShipTo'|translate}}</p>
+                        <p>{{list.shippingAddress1}},</p>
+                        <p>{{list.shippingCity}},</p>
+                        <p>{{list.shippingPostcode}}</p>
+                    </div>
+                    <div class="ohr-group">
+                        <p>{{'account.OrderStatus'|translate}}</p>
+                        <span *ngIf="list.cancelRequest === 0">
+                            <h4 class="os">{{list.orderStatusName}}</h4>
+                          </span>
+                        <span *ngIf="list.cancelRequest === 1 && list.cancelRequestStatus === 0">
+                            <h4 class="os" style="color:red !important">{{'account.CancelOrderPending'|translate}}.</h4>
+                          </span>
+                    </div>
+                    <div class="ohr-group">
+                        <p>{{'account.OrderID'|translate}} : # {{list.orderProductPrefixId}}</p>
+                        <div class="select">
+                            <p><i *ngIf="(sandbox.downloadInvoiceLoading$ | async) && id === list.orderProductId" class="fa fa-refresh fa-spin"></i>
+                                <a (click)="list.cancelRequestStatus === 1? false : downloadInvoice(list.orderProductId)" style="cursor: pointer;">{{'account.Invoice'|translate}}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--head-->
+                <div class="ohr-content">
+                    <div class="ohrc-row flex">
+                        <div class="ohrcr-left flex">
+                            <div class="ohrcr-img">
+                                <img [src]="imageUrl + '/' + list.containerName + '/' + list.image+'?tr=w-200,h-200' ">
+                            </div>
+                            <div class="ohrcr-cnt">
+                                <div class="flex ohrcr-cnt-top">
+                                    <h3> <a href="javascript:void(0)" [routerLink]="['/products/productdetails', list.productSlug]">{{list.productName}}</a> </h3>
+                                </div>
+                                <div class="flex ohrcr-cnt-bt">
+                                    <button style="cursor: pointer;" [routerLink]="['/products/productdetails', list.productSlug]">{{'account.BuyItAgain'|translate}}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!--left-->
+                        <div class="ohrc-right">
+                            <button [routerLink]="list.cancelRequestStatus !== 1? ['/account/track', list.orderProductId] : []" style="cursor: pointer;">{{'account.TrackOrder'|translate}} <img src="assets/images/others/arrow-right.svg"> </button>
+                            <button matTooltip="{{'account.feature'|translate}}">{{'account.Documents'|translate}} <img src="assets/images/others/arrow-right.svg"> </button>
+                            <button [routerLink]="list.cancelRequestStatus !== 1? ['/account/order-details', list.orderProductId] : []" style="cursor: pointer;">{{'account.OrderDetails'|translate}} <img src="assets/images/others/arrow-right.svg"> </button>
+                            <span *ngIf="list.cancelRequest === 0">
+                                <button  (click)="cancelOrder(list)" style="cursor: pointer;" > {{'account.CancelOrder'|translate}} <img src="assets/images/others/arrow-right.svg"> </button>
+                                </span>
+                            <span *ngIf="list.cancelRequest === 1 && list.cancelRequestStatus === 0">
+                                    <button  (click)="cancelOrder(list)" [disabled]="cancelStatus" [ngClass]="{'cancel-disable': cancelStatus}" style="cursor: pointer;" > {{'account.CancelOrder'|translate}} <img src="assets/images/others/arrow-right.svg"> </button>
+                                    </span>
+                            <p style="margin-left:9px !important; color: #2774F0;" *ngIf="list.cancelRequestStatus === 1" style="color: red">{{'account.CancelOrderCancelled'|translate}}.</p>
+                            <p style="margin-left:9px !important; color: #2774F0;" *ngIf="list.cancelRequestStatus === 2">{{'account.CancelOrderRejected'|translate}}.</p>
+                        </div>
+                    </div>
+                </div>
+                <!--content-->
+            </div>
+            <!--row-->
+
+
+            <!--row-->
+
+
+        </div>
+        <!--Past Orders-->
+
+        <div id="tab-body-4" class="tab-body review-tab-body">
+            <div class="text-center" *ngIf="(sandbox.orderList$ | async).length === 0 && (sandbox.orderListLoaded$ | async)" style="margin-top: 140px">
+                {{'account.NoItem'|translate}}</div>
+            <div class="spinner-wrapper">
+                <app-spinner [isShow]="sandbox.orderListLoading$ | async"></app-spinner>
+            </div>
+
+            <div class="flex ord-plc-select">
+            </div>
+
+            <div class="orderhistory-row" *ngFor="let list of sandbox.orderList$ | async">
+                <div class="ohr-head flex">
+                    <div class="flex ohrh-lft ">
+                        <div class="ohr-group">
+                            <p>{{'account.OrderPlaced'|translate}} </p>
+                            <h4>{{list.createdDate| date: 'dd/MM/yyyy'}}</h4>
+                        </div>
+                        <div class="ohr-group">
+                            <p>{{'account.Total'|translate}}</p>
+                            <h4>{{list?.currencySymbolLeft}} {{list.total}} {{list?.currencySymbolRight}}</h4>
+                        </div>
+                        <div class="ohr-group">
+                            <p>{{'account.ShipTo'|translate}}</p>
+                            <p>{{list.shippingAddress1}},</p>
+                            <p>{{list.shippingCity}},</p>
+                            <p>{{list.shippingPostcode}}</p>
+                        </div>
+                    </div>
+                    <div class="ohr-group">
+                        <p>{{'account.OrderID'|translate}} : # {{list.orderProductPrefixId}}</p>
+
+                    </div>
+                </div>
+                <!--head-->
+                <div class="ohr-content">
+                    <h4>{{'account.Cancelled'|translate}} </h4>
+                    <div class="ohrc-row flex">
+                        <div class="ohrcr-left flex">
+                            <div class="ohrcr-img">
+                                <img [src]="imageUrl + '/' + list.containerName + '/' + list.image+'?tr=w-200,h-200' ">
+                            </div>
+                            <div class="ohrcr-cnt">
+                                <div class="flex ohrcr-cnt-top">
+                                    <h3> <a href="javascript:void(0)">{{list.productName}}</a> </h3>
+                                </div>
+                                <div class="flex ohrcr-cnt-bt">
+                                    <button style="cursor: pointer;" [routerLink]="['/products/productdetails', list.productSlug]">Buy it again</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!--left-->
+                        <div class="ohrc-right">
+
+                        </div>
+                    </div>
+                </div>
+                <!--content-->
+            </div>
+            <!--row-->
+
+        </div>
+        <!--Cancelled Orders-->
+
+    </div>
+    <div *ngIf="(sandbox.orderList$ | async)?.length > 0" fxLayout="row wrap" class="page-wrap">
+        <div fxFlex="100">
+            <mat-card class="p-0 text-center">
+                <div class="flex pagination-wrap flex " *ngIf="(sandbox.orderListCount$ | async) > limit">
+                    <p>{{'allproduct.page'|translate}} {{page}} {{'allproduct.of'|translate}} {{pageCount}}</p>
+                    <ngb-pagination [collectionSize]="sandbox.orderListCount$ | async" [(page)]="page" [pageSize]="limit" [rotate]="true" [maxSize]="3" (pageChange)="pageEvent($event)">
+                        <ng-template ngbPaginationPrevious>Prev</ng-template>
+                        <ng-template ngbPaginationNext>{{'allproduct.next'|translate}} </ng-template>
+
+                    </ngb-pagination>
+
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

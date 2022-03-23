@@ -1,0 +1,89 @@
+.wrapper-accont {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.16);
+    padding: 16px;
+    .account-card-title {
+        background: #f1f9ff;
+        h3 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #000;
+        }
+    }
+}
+.flex-wrapper{
+    margin: 8px -8px;
+    .col{
+        padding: 8px;
+    }
+}
+.account-card-content{
+    height: 134px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    .account-img {
+        width: 80px;
+        img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+    }
+    .account-rht {
+        width: calc(100% - 80px);
+        padding-left: 20px;
+        p {
+            font-size: 14px;
+            font-weight: 400;
+            color: #212121;
+            line-height: 20px;
+            margin-bottom: 4px;
+            word-break: break-all;
+            a {
+                color: #2874f0;
+            }
+        }
+    }
+    &.acc-rht {
+        justify-content: center;
+        align-items: center;
+        button {
+            background: transparent;
+            border: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #212121;
+            cursor: pointer;
+            img {
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .account-card-content {
+        .account-img {
+            width: 40px;
+            img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        .account-rht {
+            width: calc(100% - 40px);
+        }
+        &.acc-rht {
+            flex-direction: column;
+            button {
+                width: 100%;
+                border-radius: 4px;
+                padding: 20px;
+            }
+        }
+    }
+}

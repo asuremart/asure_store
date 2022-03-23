@@ -1,0 +1,198 @@
+<div class="theme-container  main">
+    <div class="vendor-wrapper flex">
+
+
+        <div class="vendor-right" *ngIf="(listSandbox.vendorDetail$| async) as vendor">
+            <div class="vr-banner" *ngIf="vendor?.companyCoverImage !== null">
+                <img height="190px" [src]="imagePath + '/' + vendor.companyCoverImagePath + '/' + vendor.companyCoverImage  " onError="this.src='assets/images/vendor-default-banner.png';">
+
+
+            </div>
+            <div class="vr-banner" *ngIf="(listSandbox.vendorDetail$| async)?.companyCoverImage === null">
+                <img src="assets/images/vendor-banner.jpg">
+            </div>
+            <div class="tabs-wrapper">
+                <input type="radio" name="tab" id="tab1" class="tab-head1" checked="checked" />
+                <label for="tab1">{{'vendorDetail.About'|translate}}</label>
+                <input type="radio" name="tab" id="tab2" class="tab-head2" />
+                <label for="tab2">{{'vendorDetail.Products'|translate}}</label>
+                <input type="radio" name="tab" id="tab3" class="tab-head3" />
+                <label for="tab3">{{'vendorDetail.Reviews'|translate}}</label>
+                <div class="tab-body-wrapper">
+
+                    <div id="tab-body-1" class="tab-body">
+                        <div *ngIf="(listSandbox.vendorDetail$| async)?.companyDescription !== ''">
+
+                            <div class="ven-abt-top flex" *ngIf="(listSandbox.vendorDetail$| async)?.companyLogo">
+                                <img [src]="imagePath + '/' + vendor.companyLogoPath + '/' + vendor.companyLogo + '?tr=w-300,h-543'" onError="this.src='/assets/images/default_image.png';">
+                                <div class="vat-col">
+                                    <h3 *ngIf="(listSandbox.vendorDetail$| async)?.companyName">{{'vendorDetail.About'|translate}} {{(listSandbox.vendorDetail$| async)?.companyName}}
+                                        <p [innerHtml]="(listSandbox.vendorDetail$| async)?.companyDescription"></p>
+                                    </h3>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="flex wishlist-empty" *ngIf="!(listSandbox.vendorDetail$| async)?.companyDescription || (listSandbox.vendorDetail$| async)?.companyDescription === ''">
+
+
+                            <h4 style="font-size:27px;margin:100px 0px 0px 450px">{{'vendorDetail.Found'|translate}}</h4>
+
+                        </div>
+                    </div>
+
+                    <div id="tab-body-2" class="tab-body review-tab-body">
+                        <div class="wrapper" *ngIf="(listSandbox.vendorProductListLoading$ | async)">
+                            <div class="overlay">
+                                <div class="spinner-wrapper">
+                                    <app-spinner [isShow]="(listSandbox.vendorProductListLoading$ | async)"></app-spinner>
+                                </div>
+                            </div>
+                        </div>
+                        <div fxLayout="row wrap" class="products-wrapper" *ngIf="(listSandbox.vendorProductListLoaded$ | async) && (listSandbox.vendorProductList$ | async)?.length > 0">
+                            <div *ngFor="let product of (listSandbox.vendorProductList$ | async)" fxFlex="100" [fxFlex.gt-sm]="25" fxFlex.sm="50" class="col">
+                                <mat-card class="product-item text-center" style="margin-right: 20px; margin-bottom: 20px;">
+                                    <mat-chip-list>
+                                    </mat-chip-list>
+                                    <a [routerLink]="['/products/productdetails', product.productSlug]" class="image-link">
+                                        <img style="height:200px" [src]="imagePath+ '/' + product.Images?.containerName + '/' + product.Images?.image + '?tr=w-260,h-260'" onError="this.src='/assets/images/default_image.png';">
+                                    </a>
+                                    <div class="ps-cnt-hdr">
+                                        <h3>
+                                            <a [routerLink]="['/products/productdetails', product.productSlug]" class="title text-truncate">
+                                            {{product.name}}
+                                        </a>
+                                        </h3>
+                                        <div class="ps-star">
+
+                                        </div>
+                                        <div class="pricing flex">
+                                            <p class="new-price flex">
+                                                <ng-container *ngIf="(product.flag == '' && product.pricerefer == '');else one">
+                                                    {{calculatePrice(product.price, product.taxType, product.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}</ng-container>
+                                                <ng-template #one>
+                                                    <span *ngIf="product.flag === 0">{{calculatePrice(product.pricerefer,
+                                                        product.taxType, product.taxValue) | currencysymbol:
+                                                        (listSandbox.symbolSetting$ | async)}}</span>
+                                                    <span *ngIf="product.flag === 1"><del
+                                                            class="del">{{calculatePrice(product.price, product.taxType,
+                                                            product.taxValue) | currencysymbol: (listSandbox.symbolSetting$
+                                                            | async)}}</del> {{calculatePrice(product.pricerefer,
+                                                        product.taxType, product.taxValue) | currencysymbol:
+                                                        (listSandbox.symbolSetting$ | async)}}</span>
+                                                </ng-template>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="icons">
+                                        <app-controls [product]="product" [type]="'all'" [page]="'vendorProduct'" (OpenProductDialog)="openProductDialog(product)"></app-controls>
+                                    </div>
+                                </mat-card>
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="flex wishlist-empty" *ngIf="(listSandbox.vendorProductListLoaded$ | async) && (listSandbox.vendorProductList$ | async)?.length === 0">
+
+
+                            <h4>{{'vendorDetail.Found'|translate}}</h4>
+
+                        </div>
+
+
+                        <div *ngIf="(listSandbox.vendorProductList$ | async)?.length > 0" fxLayout="row wrap" class="page-wrap">
+                            <div fxFlex="100">
+                                <mat-card class="p-0 text-center">
+                                    <div class="flex pagination-wrap flex " *ngIf="(listSandbox.vendorProductListCount$| async) ">
+                                        <p>{{'allproduct.page'|translate}} {{page}} {{'allproduct.of'|translate}} {{pageCount}}</p>
+                                        <ngb-pagination [collectionSize]="listSandbox.vendorProductListCount$ | async" [(page)]="page" [pageSize]="limit" [rotate]="true" [maxSize]="3" (pageChange)="pageEvent($event)">
+                                            <ng-template ngbPaginationPrevious>Prev</ng-template>
+                                            <ng-template ngbPaginationNext>{{'allproduct.next'|translate}} </ng-template>
+
+                                        </ngb-pagination>
+
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="tab-body-3" class="tab-body review-tab-body">
+                        <div class="wrapper" *ngIf="(listSandbox.vendorReviewListLoading$ | async)">
+                            <div class="overlay">
+                                <div class="spinner-wrapper">
+                                    <app-spinner [isShow]="(listSandbox.vendorReviewListLoading$ | async)"></app-spinner>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="(listSandbox.vendorReviewListLoaded$ | async) && (listSandbox.vendorReviewList$ | async).length > 0">
+                            <h3>{{(listSandbox.vendorReviewList$ | async).length}}{{'vendorDetail.reviewed'|translate}}</h3>
+                            <div class="full-desc lh">
+                                <mat-list class="reviews" *ngFor="let list of listSandbox.vendorReviewList$ | async">
+                                    <mat-list-item class="h-100 py-1">
+
+                                        <ng-container *ngIf="list.avatar===null" matListAvatar>
+                                            <span class="review-author">
+                                                {{getShortName(list.firstName + ' ' + list.lastName)}}
+                                            </span>
+                                        </ng-container>
+
+                                        <img *ngIf="list.avatar !=null" matListAvatar [src]="imagePath + '/' + list.avatarPath + '/' + list.avatar" onError="this.src='assets/images/avatars/avatar-1.png';" alt="image" class="review-author">
+
+                                        <p matLine fxLayoutAlign="start center" class="r-tit">
+                                            <span class="fw-500">{{list.firstName}} {{list.lastName}}</span>
+                                        </p>
+                                        <p matLine class="dte"><small>{{list.createdDate | date: "dd MMMM, yyyy"}} at
+                                                {{list.createdDate | date: "hh:mm":" +0000" + 5.30}}</small></p>
+                                        <p matLine class="dte">
+                                            <app-mat-star-rating [rating]="list?.rating"></app-mat-star-rating>
+
+                                        </p>
+                                        <p matLine class="text desc">{{list.review}}</p>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+
+
+
+
+
+                            <div *ngIf="(listSandbox.vendorReviewList$ | async).length > 0" fxLayout="row wrap" class="page-wrap">
+                                <div fxFlex="100">
+                                    <mat-card class="p-0 text-center">
+                                        <div class="flex pagination-wrap flex" *ngIf="(listSandbox.vendorReviewListCount$| async)> limitreview">
+                                            <p>{{'allproduct.page'|translate}} {{pagereview}} {{'allproduct.of'|translate}} {{pageCountreview}}</p>
+                                            <ngb-pagination [collectionSize]="listSandbox.vendorReviewListCount$ | async" [(page)]="pagereview" [pageSize]="limitreview" [rotate]="true" [maxSize]="3" (pageChange)="pageEventreview($event)">
+                                                <ng-template ngbPaginationPrevious>Prev</ng-template>
+                                                <ng-template ngbPaginationNext>{{'allproduct.next'|translate}} </ng-template>
+
+                                            </ngb-pagination>
+
+                                        </div>
+                                    </mat-card>
+                                </div>
+                            </div>
+
+
+
+                        </ng-container>
+
+                        <div class="wishlist-empty" style="font-size: 27px; justify-content: center; display: flex; margin-top: 17vh;" *ngIf="(listSandbox.vendorReviewListLoaded$ | async) && (listSandbox.vendorReviewList$ | async).length === 0">
+
+                            <div>
+                                <img src="assets/img/no-review.svg">
+                                <h4>{{'vendorDetail.Found'|translate}}</h4>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

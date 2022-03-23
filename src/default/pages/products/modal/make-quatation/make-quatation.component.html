@@ -1,0 +1,79 @@
+<mat-dialog-content class="mat-typography">
+  <div class="scp-wrap">
+      <div class="scp-head">
+        <div class="scp-back"> <a href="javascript:Void(0)" (click)="close()"><span class="material-icons">close</span> </a> </div>
+        <h3>{{'RequestQuote.ContactSeller'|translate}}</h3>
+      </div>
+      <form [formGroup]="quationForm">
+      <div class="sq-form">
+        <div class="input-group">
+          <p> {{'RequestQuote.Quantity'|translate}}</p>
+          <input type="text" formControlName="quantity" placeholder=" {{'RequestQuote.Quantity'|translate}}" appOnlyNumber [ngClass]="{'validationcolor':quationForm.controls['quantity'].hasError('required') && submitted}" >
+          <div class="error" *ngIf="quationForm.controls['quantity'].hasError('required') && submitted">
+              {{'products.EnterQuantity'|translate}}</div> 
+        </div>
+        <div class="input-group">
+          <p>{{'RequestQuote.QuantityUnit'|translate}}</p>
+          <div class="avl-opt">
+          
+              <mat-select style="border: 1px solid #bfbfbf; padding: 5px;"  formControlName="unit" [ngClass]="{'validationcolor':quationForm.controls['unit'].hasError('required') && submitted}">
+                <mat-option value="" selected hidden >{{'RequestQuote.Select'|translate}}</mat-option>
+                <mat-option value="Kg">{{'RequestQuote.Kg'|translate}}</mat-option>
+                <mat-option value="Piece">{{'RequestQuote.Piece'|translate}} </mat-option>
+                <mat-option value="Other">{{'RequestQuote.Other'|translate}}</mat-option>
+              </mat-select>
+            <div class="error" *ngIf="quationForm.controls['unit'].hasError('required') && submitted">
+                {{'products.SelectUnit'|translate}}</div> 
+          </div>
+        </div>
+        <div class="input-group">
+          <p>{{'RequestQuote.Total'|translate}}</p>
+          <div class="avl-opt">
+          
+              
+              <mat-select style="border: 1px solid #bfbfbf; padding: 5px;" formControlName="totalOrder" [ngClass]="{'validationcolor':quationForm.controls['totalOrder'].hasError('required') && submitted}">
+                <mat-option value="">{{'RequestQuote.Selectvalue'|translate}}</mat-option>
+                <mat-option value="Upto 1,000">{{'RequestQuote.Upto'|translate}} 1,000 </mat-option>
+                <mat-option value="1,000 to 3,000"> 1,000 {{'RequestQuote.to'|translate}} 3,000 </mat-option>
+                <mat-option value="3,000 to 10,000"> 3,000 {{'RequestQuote.to'|translate}} 10,000 </mat-option>
+                <mat-option value="10,000 to 20,000"> 10,000 {{'RequestQuote.to'|translate}} 20,000 </mat-option>
+                <mat-option value="20,000 to 50,000"> 20,000 {{'RequestQuote.to'|translate}} 50,000 </mat-option>
+                <mat-option value="50,000 to 1 Lakh"> 50,000 {{'RequestQuote.to'|translate}} 1 {{'RequestQuote.Lakh'|translate}} </mat-option>
+                <mat-option value="1 Lakh to 2 Lakh"> 1 {{'RequestQuote.Lakh'|translate}} {{'RequestQuote.to'|translate}} 2 {{'RequestQuote.Lakh'|translate}}</mat-option>
+                <mat-option value="2 Lakh to 5 Lakh"> 2 {{'RequestQuote.Lakh'|translate}} {{'RequestQuote.to'|translate}} 5 {{'RequestQuote.Lakh'|translate}}</mat-option>
+                <mat-option value="5 Lakh to 10 Lakh"> 5 {{'RequestQuote.Lakh'|translate}} {{'RequestQuote.to'|translate}} 10 {{'RequestQuote.Lakh'|translate}} </mat-option>
+                <mat-option value="10 Lakh to 20 Lakh"> 10 {{'RequestQuote.Lakh'|translate}} {{'RequestQuote.to'|translate}} 20 {{'RequestQuote.Lakh'|translate}} </mat-option>
+                <mat-option value="20 Lakh to 50 Lakh"> 20 {{'RequestQuote.Lakh'|translate}} {{'RequestQuote.to'|translate}} 50 {{'RequestQuote.Lakh'|translate}} </mat-option>
+                <mat-option value="50 Lakh to 1 Crore"> 50 {{'RequestQuote.Lakh'|translate}} {{'RequestQuote.to'|translate}} 1 {{'RequestQuote.Crore'|translate}}</mat-option>
+                <mat-option value="More than 1 Crore"> {{'RequestQuote.More'|translate}} 1 {{'RequestQuote.Crore'|translate}} </mat-option>
+              </mat-select> 
+            <div class="error" *ngIf="quationForm.controls['totalOrder'].hasError('required') && submitted">
+                {{'products.SelectOrderValue'|translate}}</div> 
+          </div>
+        </div>
+        <div class="input-group">
+          <p>{{'RequestQuote.Why'|translate}}? ({{'RequestQuote.Selectonly'|translate}})</p>
+          <div class="aopsc-rt">
+            <mat-radio-group aria-label="Select an option" formControlName="purpose">
+              <mat-radio-button value="1">{{'RequestQuote.Reselling'|translate}}</mat-radio-button>
+              <mat-radio-button value="2">{{'RequestQuote.Business'|translate}}</mat-radio-button>
+              <mat-radio-button value="3">{{'RequestQuote.Home'|translate}}</mat-radio-button>
+            </mat-radio-group>
+            <div class="error" *ngIf="quationForm.controls['purpose'].hasError('required') && submitted">
+                {{'RequestQuote.Selectanyone'|translate}}.</div> 
+          </div>
+        </div>
+        <div class="input-group">
+          <p>{{'RequestQuote.Comments'|translate}}</p>
+          <textarea rows="4" formControlName="comments" placeholder="{{'RequestQuote.Comments'|translate}}"></textarea>
+        </div>
+      </div>
+      <div class="scp-ftr flex">
+        <button class="flex spinner-button" style="cursor: pointer" (click)="submit()" [disabled]="(sandbox.makeQuatationLoading$ | async)">
+            <mat-spinner diameter="25" *ngIf="sandbox.makeQuatationLoading$ | async"></mat-spinner> <span>{{'account.Submit'|translate}}</span>
+        </button>
+      </div>
+    </form>
+    </div>
+    <div class="backdrop"></div>
+</mat-dialog-content>

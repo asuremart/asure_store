@@ -1,0 +1,56 @@
+<div class="flex order-title">
+    <h3 class="flex">{{'account.ReviewProduct'|translate}} </h3>
+</div>
+<!-- spinner -->
+<div class="wrapper" *ngIf="sandbox.myOrderDetailsLoading$ | async">
+    <div class="overlay">
+        <div class="spinner-wrapper">
+            <app-spinner [isShow]="sandbox.myOrderDetailsLoading$ | async"></app-spinner>
+        </div>
+    </div>
+</div>
+<mat-card>
+    <div class="flex" *ngIf="(sandbox.myOrderDetails$ | async) && (sandbox.myOrderDetailsLoaded$ | async)">
+
+        <div *ngIf="(sandbox.myOrderDetails$ | async) as list" class="ord-his-img ">
+
+            <img [src]="imageUrl + '/' + list.containerName + '/' + list.productImage + '?tr=w-300,h-300'">
+
+            <h3>{{list.productName}}</h3>
+            <h4>{{(listSandbox.symbolSetting$ | async)?.symbol}} {{list.total}}
+            </h4>
+
+
+        </div>
+
+        <div class="ord-his-con ">
+            <div class="form-review">
+
+                <h3>{{'account.RatethisProduct'|translate}}</h3>
+
+                <button mat-icon-button [ngStyle]="{'color': '#ffed14'}" *ngFor="let ratingId of ratingArr;index as i" [id]="'star_'+i" (click)="onClick(i+1)" [matTooltip]="ratingId+1" matTooltipPosition="above">
+                    <mat-icon>
+                        {{showIcon(i)}}
+                    </mat-icon>
+                </button>
+
+            </div>
+            <div class="error" *ngIf="ratingError && submitted">{{'account.PleaseGiveRating'|translate}}</div>
+            <div class="ohs-tit">
+                <h3>{{'account.ReviewthisProduct'|translate}}</h3>
+
+                <textarea #todo rows="10" cols="85" [(ngModel)]="review" placeholder="{{'account.Description'|translate}}" [ngClass]="{'validationcolor':textError && submitted}" style="font-family:Roboto,sans-serif;outline:none"></textarea>
+                <div class="error" *ngIf="textError && submitted">{{'account.TypeReview'|translate}}</div>
+
+            </div>
+            <div class="btnsubmit">
+                <button mat-raised-button (click)="submit(todo.value)">
+                    {{'account.Submit'|translate}}
+                    <i *ngIf="(sandbox.addProductReviewLoading$ | async)" class=""></i>
+                </button>
+            </div>
+
+
+        </div>
+    </div>
+</mat-card>

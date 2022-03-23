@@ -1,0 +1,86 @@
+
+<div class="container">
+
+    <div class="registration-wrap flex" [formGroup]="registerForm">
+  
+        <div class="reg-left">
+              <div class="reg-lft-inner">
+          <h3>{{'Register.Registration'|translate}}</h3>
+          <div class="input-group">
+            <p>{{'Register.FullName'|translate}}</p>
+            <input type="text" formControlName="name" (keyup.enter)="onRegisterFormSubmit(registerForm.value)" placeholder="{{'Register.FullName'|translate}}"  [ngClass]="{'validationcolor':registerForm.controls.name.hasError('required') && submitted }">
+            <mat-error *ngIf="registerForm.controls['name'].hasError('required') && submitted">{{'Register.fullnameisrequired'|translate}}</mat-error>
+          <mat-error *ngIf="registerForm.controls['name'].hasError('minlength') && submitted">
+              {{'Error.FullNameLong'|translate}}</mat-error>
+          <mat-error *ngIf="registerForm.controls['name'].hasError('pattern') && submitted">
+              {{'Error.NameMustBeString'|translate}}</mat-error>
+          </div>
+          <div class="input-group">
+            <p>{{'Register.E-mail'|translate}}</p>
+            <input  formControlName="email"   (keyup.enter)="onRegisterFormSubmit(registerForm.value)" placeholder="{{'Register.UserName'|translate}}@gmail.com" [ngClass]="{'validationcolor':registerForm.controls.email.hasError('required') && submitted }"  >
+            <mat-error *ngIf="registerForm.controls['email'].hasError('required') && submitted">
+              {{'Error.EmailIsRequired'|translate}}</mat-error>
+          <mat-error *ngIf="registerForm.controls['email'].hasError('invalidEmail') && submitted">
+              {{'Error.InvalidEmailAddress'|translate}}</mat-error>
+          </div>
+          <div class="input-group"  >
+            <p>{{'Register.Password'|translate}}</p>
+            <div class="ig-password" >
+              <input type="password"   (keyup.enter)="onRegisterFormSubmit(registerForm.value)"  formControlName="password" placeholder="{{'Register.Password'|translate}}"  type="password" minlength="5" required [ngClass]="{validationcolor:registerForm.controls.password.hasError('required') && submitted }">
+              <mat-error class="validation-error" *ngIf="registerForm.controls['password'].hasError('required') && submitted">{{'Error.PasswordisRequired'|translate}}</mat-error>
+              <mat-error class="validation-error" *ngIf="registerForm.controls['password'].hasError('minlength') && submitted">{{'Error.PasswordMustEightLetter'|translate}}</mat-error>
+              <mat-error class="validation-error" *ngIf="registerForm.controls['password'].hasError('hasCapitalCase') && submitted">{{'Error.PasswordMustContainCapitalCase'|translate}}</mat-error>
+              <mat-error class="validation-error" *ngIf="registerForm.controls['password'].hasError('hasSmallCase') && submitted">{{'Error.PasswordMustContainSmallCase'|translate}}</mat-error>
+              <mat-error class="validation-error" *ngIf="registerForm.controls['password'].hasError('hasNumber') && submitted">{{'Error.PasswordMustContainNumberOrSymbol'|translate}}</mat-error>
+              <mat-error class="validation-error" *ngIf="registerForm.controls['password'].hasError('maxlength') && submitted">{{'Error.PasswordMaximumLength'|translate}}</mat-error>
+      <ul class="password-note">
+          <li>{{'Auth.MustBeEightcharacters'|translate}}</li>
+          <li>{{'Auth.MustNotPartOfEmail'|translate}}</li>
+          <li>{{'Auth.MustContainLowerUpper'|translate}}</li>
+          <li>{{'Auth.MustContainSymbolNumber'|translate}}</li>
+      </ul>
+            </div>
+          </div>
+          <div class="input-group">
+            <p>{{'Register.ConfrimPassword'|translate}}</p>
+            <div class="ig-password">
+              <input type="password"  (keyup.enter)="onRegisterFormSubmit(registerForm.value)" placeholder="{{'Register.ConfrimPassword'|translate}}" formControlName="confirmPassword" required [ngClass]="{validationcolor:registerForm.controls.confirmPassword.hasError('required') && submitted }">
+      
+                
+            <mat-error
+                *ngIf="registerForm.controls['confirmPassword'].hasError('mismatchedPasswords') && submitted">
+                {{'Register.confirmpasswordandpasswordshouldbesame'|translate}} </mat-error>              
+            </div>
+          </div>
+        
+        <div class="input-group">
+            <p>{{'Register.PhoneNumber'|translate}}</p>
+            <div class="ig-password">
+              <input type="text" maxlength="15" appOnlyNumber placeholder="{{'Register.PhoneNumber'|translate}}" (keyup.enter)="onRegisterFormSubmit(registerForm.value)" [ngClass]="{validationcolor:registerForm.controls.phoneNumber.hasError('required') && submitted }"
+              formControlName="phoneNumber"
+              required>
+      
+                
+              <mat-error *ngIf="registerForm.controls['phoneNumber'].hasError('required') && submitted">{{'Register.PhoneNumberrequired'|translate}}</mat-error>              
+            </div>
+       </div>
+  
+        <div class="text-center mt-2 ">
+          <button class="mat-elevation-z6 signin submit cart-btn" color="primary" (click)="onRegisterFormSubmit(registerForm.value)">
+          <i *ngIf="authSandbox?.registerLoading$ | async" class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+          
+          <span *ngIf="!(authSandbox.registerLoading$ | async)"> {{'Register.REGISTER'|translate}}</span>
+          </button>
+          </div>
+          <p class="alread-acc">{{'Register.AlreadyHaveanAccount'|translate}}? <a href="javascript:void(0)" (click)="login()" >{{'Register.Signin'|translate}}</a> </p>
+        </div>
+        </div>
+  
+        <div class="reg-rht">
+          <img src="assets/img/reg-img.svg">
+        </div>
+     
+    </div>
+  
+  
+  </div>

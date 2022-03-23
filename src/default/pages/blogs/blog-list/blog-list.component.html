@@ -1,0 +1,67 @@
+<div class="theme-container main">
+
+    <div class="blog-wrapper">
+        <div class="blog-wrap ">
+            <div class="blog-card">
+
+                <div class="blog-card flex">
+                    <h3 class="blog-title">{{'Blogs.Featured'|translate}}</h3>
+
+                    <div class="blog-img">
+                        <img [src]=" imagePath+'/'+(blogsSandbox.featuredList$ | async)?.imagePath+'/'+(blogsSandbox.featuredList$ | async)?.image+'?tr=w-200,h-200'" class="feature">
+                    </div>
+                    <div class="blog-content">
+                        <p> {{ (blogsSandbox.featuredList$ | async)?.createdDate | date : ' MMM dd , yyyy' }} </p>
+                        <h3>{{(blogsSandbox.featuredList$ | async)?.title}}</h3>
+                        <h4 [innerHTML]="content | slice:0:600"></h4>
+
+                    </div>
+
+                    <!--Content-->
+                </div>
+                <div class="blog-tit flex">
+                    <h2>{{'Blogs.BlogList'|translate}}</h2>
+                </div>
+
+                <div class="flex blog-row2" *ngIf="!(blogsSandbox.blogDetailLoading$ |async)">
+                    <div class="blog-col-rht flex">
+                        <div class="blog-card2 " [routerLink]="['/blogs/blog-detail/', blog.blogSlug]" *ngFor="let blog of blogsSandbox.blogList$ | async">
+                            <div class="blog-img">
+                                <img [src]=" imagePath + '/' + blog.imagePath + '/' + blog.image + '?tr=w-200,h-150'">
+
+                            </div>
+
+
+                            <div class="blog-content">
+                                <h3>{{blog.title}}</h3>
+                                <p [innerHTML]="blog.description | slice:0:150"></p>
+                                <span *ngIf="blog.description.length > 150">...</span>
+                                <div class="flex blog-card-ftr">
+                                    <h4>{{blog.createdByName}}</h4>
+                                    <p>{{blog.createdDate | date : 'dd MMM yyyy'}}</p>
+
+                                </div>
+                            </div>
+                            <div class="blog-card-hover">
+                                <h3>{{blog.title}}</h3>
+                                <p [innerHTML]="blog.description | slice:0:150"></p>
+                                <h4><a href="javascript:void(0)">{{'Blogs.ViewMore'|translate}} </a></h4>
+
+                            </div>
+
+                            <!--Content-->
+
+
+
+                        </div>
+
+                    </div>
+                    <!--Card-->
+                </div>
+
+                <!--Row-->
+
+
+                <div class="no-product-compare" *ngIf="(blogsSandbox.blogList$ | async)?.length === 0 && blogsSandbox.blogListLoaded$ | async">
+
+                </div>

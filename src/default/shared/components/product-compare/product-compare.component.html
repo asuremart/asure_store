@@ -1,0 +1,5 @@
+<span class="compare-lk" matTooltip="{{'ViewCart.compare'|translate}}" (click)="addToCompare(product)">
+    <img src="assets/img/compare-arrows.svg" *ngIf="!ifProductAlreadySelected(product)"  style="margin-top: 10px">
+    <img src="assets/img/compare-icon.svg"  *ngIf="ifProductAlreadySelected(product)" style="margin-top: 10px">
+
+</span>

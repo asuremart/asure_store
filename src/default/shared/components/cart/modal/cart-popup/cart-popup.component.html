@@ -1,0 +1,97 @@
+<mat-dialog-content class="mat-typography">
+    <div class="scp-wrap">
+        <div style="background-color: #f1f6ff;" class="scp-head">
+            <div class="flex scp-back">
+                <a href="javascript:Void(0)" (click)="close()">
+                    < {{ 'cart.Back'|translate}} </a>
+            </div>
+            <h3 style="font-size: 18px; font-weight: 500;">{{'cart.ShoppingCart'|translate}}</h3>
+            <h4 class="flex"> {{'cart.YourItem'|translate}} - {{productControlSandbox.cartlistCount$ | async}} <a href="javascript:void(0)" (click)="viewCart()">View Cart</a> </h4>
+
+        </div>
+        <div *ngIf="(productControlSandbox.cartlistCount$ | async) > '0'" class="table-responsive">
+            <table class="table">
+                <tr *ngFor="let product of productControlSandbox.cartlist$ | async">
+                    <td class="cart-icon">
+                        <img *ngIf="product.image && product.containerName !== ''" [src]="imagePath+ '/' + product.image.containerName + '/' + product.image.image + '?tr=w-100,h-100'" onError="this.src='/assets/images/default_image.png';">
+                        <img *ngIf="product.image && product.containerName === ''" [src]="imagePath+ '/' + product.containerName + '/' + product.image + '?tr=w-100,h-100'" onError="this.src='/assets/images/default_image.png';">
+                        <img *ngIf="product.Images " [src]="imagePath + '/' + product['Images'].containerName + '/' + product['Images'].image + '?tr=w-100,h-100'" onError="this.src='/assets/images/default_image.png';">
+                        <ng-container *ngIf="product.productImage && product.productImage.length >= 1">
+                            <ng-container *ngFor='let prodectDetailsImage of product.productImage'>
+
+                                <img *ngIf="prodectDetailsImage.defaultImage === 1" [src]="imagePath + '/' + prodectDetailsImage.containerName + '/' + prodectDetailsImage.image + '?tr=w-100,h-100'" onError="this.src='/assets/images/default_image.png';">
+                            </ng-container>
+                        </ng-container>
+                        <img [src]="imagePath + '/' + product.productImage.containerName + '/' + product.productImage.image + '?tr=w-100,h-100'" onError="this.src='/assets/images/default_image.png';" *ngIf="product.productImage && !product.productImage.length">
+                    </td>
+                    <td>
+                        <button (click)="remove(product)" class="close-row">x</button>
+                        <h3>{{product.name}}</h3>
+                        <div class="flex td-roe">
+                            <ng-container style="font-weight: 0;" *ngIf="product.variantName">
+                                Variant: {{product.variantName}}
+                            </ng-container>
+
+
+                            <ng-container *ngFor="let data of product._optionValueArray">
+                                <p *ngIf="data.name!=''">{{data.name}} <span>{{data.value}}</span><span *ngIf="data.type=='1'">(+
+                    {{data.amount | currencysymbol: (listSandbox.symbolSetting$ | async)}})</span><span *ngIf="data.type=='0'">(-
+                    {{data.amount | currencysymbol: (listSandbox.symbolSetting$ | async)}})</span> </p>
+                            </ng-container>
+                            <div class="id-rw flex">
+                                <button mat-icon-button matTooltip="Remove" (click)="changeCount(product, false)" style="cursor: pointer"> <img src="assets/img/minus.svg"> </button>
+                                <span> {{product.productCount}} </span>
+                                <button mat-icon-button matTooltip="Add" (click)="changeCount(product, true)" style="cursor: pointer">
+                  <img src="assets/img/add.svg"> </button>
+                            </div>
+
+                            <div class="amt">
+                                <ng-container *ngIf="(product.pricerefer=='')&&(product.flag !=1)">
+                                    <ng-container *ngIf="product.tirePrice !== ''">
+                                        {{((calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                                    </ng-container>
+                                    <ng-container *ngIf="product.tirePrice === ''">
+                                        {{((calculatePrice(product._totalOptions, product.price, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                                    </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="product.flag===0;else one">
+                                    <ng-container *ngIf="product.tirePrice !== ''">
+                                        {{((calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                                    </ng-container>
+                                    <ng-container *ngIf="product.tirePrice === ''">
+                                        {{((calculatePrice(product._totalOptions, product.pricerefer, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                                    </ng-container>
+                                </ng-container>
+                                <ng-template #one>
+                                    <ng-container *ngIf="product.flag===1">
+                                        <ng-container *ngIf="product.tirePrice !== ''">
+                                            {{((calculatePrice(product._totalOptions, product.tirePrice, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                                        </ng-container>
+                                        <ng-container *ngIf="product.tirePrice === ''">
+                                            {{((calculatePrice(product._totalOptions, product.pricerefer, product.taxType, product.taxValue)) * product.productCount).toFixed(2) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                                        </ng-container>
+
+                                    </ng-container>
+                                </ng-template>
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="empty-cart" *ngIf="(productControlSandbox.cartlistCount$ | async) == '0'">
+            <img src="assets/cart-empty.svg">
+            <h3 style="font-weight: bold; font-size: 20px;">{{'cart.EmptyCart'|translate}}</h3>
+            <p style="font-size: 14px;">{{'cart.NoItemsInYourCart'|translate}}</p>
+        </div>
+
+        <div class="scp-ftr flex" *ngIf="(productControlSandbox.cartlistCount$ | async) > '0'">
+            <button class="flex cart-btn" (click)="checkoutPage()" style="cursor: pointer"><img
+          src="assets/img/checkout.svg">{{'cart.Checkout'|translate}}</button>
+            <h3>{{'cart.FinalTotal'|translate}} {{(productControlSandbox.totalCartPrice$ | async) | currencysymbol : (listSandbox.symbolSetting$ | async)}}</h3>
+        </div>
+    </div>
+    <div class="backdrop"></div>
+</mat-dialog-content>

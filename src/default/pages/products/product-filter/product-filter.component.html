@@ -1,0 +1,69 @@
+<div class="filter-sidenav"  >
+    <h2 class="filter-title">{{'filter.filter'|translate}}</h2>
+    <mat-accordion displayMode="flat" multi="true">
+        <mat-expansion-panel expanded>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <h4 class="category-title">{{'filter.categories'|translate}}</h4>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="categories-wrapper categories-dropdown" perfectScrollbar>
+                <app-category-list [isClicked]="isClickedData" [categories]="listSandbox.categoryList$ | async" (change)="onChangeCategory($event)" [categoryId]="category"></app-category-list>
+
+            </div>
+        </mat-expansion-panel>
+
+        <ng-container *ngFor="let data of variant">
+            <mat-expansion-panel expanded>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h4>{{ data.sectionName }}</h4>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div fxLayout="column">
+                    <ng-container *ngFor="let item of data.sectionItem">
+                        <mat-checkbox [checked]="item.selected" color="primary" (change)="selectAttribute(data.id, data.sectionName, item)">{{ item.itemName }}</mat-checkbox>
+                    </ng-container>
+                </div>
+            </mat-expansion-panel>
+        </ng-container>
+
+        <mat-expansion-panel expanded class="price-slider">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="main-filter-title">
+                    <h4 class="priceClear">{{'filter.price'|translate}}   <button (click)="clear()">{{'filter.clear'|translate}}</button> </h4>
+                  
+                    <i *ngIf="listSandbox.priceLoading$ | async" class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+      
+                </mat-panel-title>
+             
+            </mat-expansion-panel-header>
+           
+             <div fxLayout="row" fxLayoutAlign="space-between center" class="filter-price">
+
+                <mat-slider color="primary" max="10000" min="1" thumb-label="true" [(ngModel)]="priceFrom" (input)="priceFromValue($event)" (mouseup)="selectPrice()"></mat-slider>
+                <mat-slider color="primary" [max]="(listSandbox.maxProductPrice$ | async)" [min]=10000 thumb-label="true" [(ngModel)]="priceTo" (input)="priceToValue($event)" (mouseup)="selectPrice()"></mat-slider>
+            </div> 
+
+            <div class="flex price-max-to">
+                <input [(ngModel)]="showMoreControls" [readonly]="disable" [ngModelOptions]="{standalone: true}">
+                <span> {{'filter.to'|translate}}</span>
+                <input [(ngModel)]="priceMax" [readonly]="disable" [ngModelOptions]="{standalone: true}">
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel expanded>
+            <mat-expansion-panel-header>
+                <mat-panel-title class="main-filter-title">
+                    <h4>{{'products.Brands'|translate}}</h4>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="column">
+                <ng-container *ngFor="let brand of originalBrandArray">
+                    <mat-checkbox [checked]="brand.isChecked" color="primary" (change)="selectBrand($event, brand.manufacturerId, brand)">{{ brand.name }}</mat-checkbox>
+                </ng-container>
+            </div>
+        </mat-expansion-panel>
+
+    </mat-accordion>
+</div>

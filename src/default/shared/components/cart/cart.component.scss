@@ -1,0 +1,28 @@
+.cart-items-count {
+    position: absolute;
+    top: -6px;
+    left: 26px;
+    background: white;
+    height: 16px;
+    width: 16px;
+    line-height: 18px;
+    border-radius: 50%;
+    font-size: 11px;
+    color: black;
+}
+
+.navcart {}
+
+.flex-row-button {}
+
+::ng-deep .cartBox {
+    width: 27% !important;
+    margin-left: auto !important;
+    margin-right: 20px;
+}
+
+@media (max-width: 500px) {
+    .navcart {
+        margin-left: 0px;
+    }
+}

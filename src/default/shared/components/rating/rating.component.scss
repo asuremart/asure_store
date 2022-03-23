@@ -1,0 +1,47 @@
+.ratings{
+    color:#fbc02d;
+    justify-content: flex-start;
+    align-items: center;
+    .star {
+        padding: 0px;
+        border-radius: 3px;
+        background: #388E3C;
+       
+        p{
+            margin-top:2px;
+            margin-left: 3px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #fff;   
+        }
+        span {
+            margin-top:2px;
+            color: #fff; 
+            margin-left: 2px;
+            font-size: 13px;
+        }
+    }
+    span{
+     
+        margin-top:2px;
+        font-size: 10px;
+        font-weight: 400;
+        color: #858585;
+        margin-left: 10px;
+    }
+   
+}
+
+.ratings-count{
+    margin-left: 12px;
+    font-weight: 500;
+}
+.rating-row {
+    justify-content: flex-start!important;
+    align-items: flex-start!important;
+    .mat-icon {
+        font-size: 1.3rem;
+        margin-right: .5rem;
+        color: #FBA70D;
+    }
+}

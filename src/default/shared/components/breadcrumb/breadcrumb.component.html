@@ -1,0 +1,53 @@
+<div fxLayout="row wrap" *ngIf="router.url != '/'" style="margin-top:10px;">
+    <div fxFlex="100">
+        <ng-container *ngIf="Selected ">
+            <mat-card fxLayout="row" class="breadcrumb light-block">
+
+                <ng-container *ngIf="isEmpty(pageInfo) && !isProductDetail && hideAllProduct && !bogsDetails && !accountSettings ">
+                    <div *ngFor="let breadcrumb of pageInfo?.urls; let last = last;" class="breadcrumb-item" fxLayout="row" fxLayoutAlign="start center">
+
+
+                        <a *ngIf="!last">{{breadcrumb.title}}</a>
+                        <a *ngIf="last">{{breadcrumb.title}}</a>
+                        <a *ngIf="last && queryParams">&nbsp;/&nbsp;{{queryParams}}</a>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="isEmpty(pageInfo) && !isProductDetail && hideAllProduct && !bogsDetails && accountSettings ">
+                    <div *ngFor="let breadcrumb of pageInfo?.urls; let i = index;" class="breadcrumb-item" fxLayout="row" fxLayoutAlign="start center">
+                        <span>{{breadcrumb.title}}</span>
+
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="isEmpty(pageInfo) && !isProductDetail && hideAllProduct && bogsDetails ">
+                    <div class="breadcrumb-item" fxLayout="row" fxLayoutAlign="start center">
+                        <span class="breadcrumb-title"><span style="cursor: pointer;" *ngIf="(blogSandbox.blogDetail$ | async)?.title">
+                        <ng-container  *ngFor="let breadcrumb of pageInfo?.urls; let i = index;">
+                            <a [hidden]="i == (pageInfo.length - 1)" *ngIf="breadcrumb.url">{{breadcrumb.title}}&nbsp;/&nbsp;{{(blogSandbox.blogDetail$|async)?.title}}</a>
+                        </ng-container>   
+                  </span></span>
+                    </div>
+
+                </ng-container>
+
+                <div *ngIf="isProductDetail" class="breadcrumb-item" fxLayout="row" fxLayoutAlign="start center">
+                    <span class="breadcrumb-title"><span style="cursor: pointer;" *ngIf="(listSandbox.productDetails$|async)?.Category[0]" [routerLink]="['/products', (listSandbox.productDetails$|async)?.Category[0].categorySlug]" >{{(listSandbox.productDetails$|async)?.Category[0]?.categoryName}}&nbsp;/&nbsp;</span>{{((listSandbox.productDetails$
+                    | async)?.name)}}</span>
+                </div>
+                <ng-container *ngIf="isProductPage && (listSandbox.categoryLevel$ | async)?.length > 0">
+                    <div class="breadcrumb-item" fxLayout="row" fxLayoutAlign="start center" *ngFor="let cat of (listSandbox.categoryLevel$ | async); let i = index">
+                        <a *ngIf="i < ((listSandbox.categoryLevel$ | async)?.length - 1) " [routerLink]="['/products', cat.categorySlug]" class="breadcrumb-title act-link">{{cat.categoryName}}</a>
+                        <span *ngIf="i == ((listSandbox.categoryLevel$ | async)?.length - 1) " class="breadcrumb-title">{{cat.categoryName}}</span>
+                    </div>
+                </ng-container>
+
+                <div *ngIf="isKeyword" class="breadcrumb-item" fxLayout="row" fxLayoutAlign="start center">
+                    <span class="breadcrumb-title">Searched Products</span>
+                </div>
+
+            </mat-card>
+        </ng-container>
+    </div>
+
+
+</div>

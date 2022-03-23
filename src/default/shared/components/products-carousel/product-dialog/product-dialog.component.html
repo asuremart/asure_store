@@ -1,0 +1,54 @@
+<div class="close-btn-outer">
+    <button mat-mini-fab [disableRipple]="true" (click)="close()"><img src="assets/img/close-square.svg">
+    </button>
+</div>
+<div mat-dialog-content>
+    <div fxLayout="row wrap" class="product-dialog-row">
+        <div fxFlex="100" fxFlex.gt-sm="50">
+            <div class="swiper-container h-100" [swiper]="config">
+                <div class="swiper-wrapper">
+                    <div *ngIf="product.details as image" class="swiper-slide">
+                        <img [attr.data-src]="imagePath + '/' + image.containerName + '/' + image.image + '?tr=w-573,h-673'" class="swiper-lazy" />
+                        <div class="swiper-lazy-preloader"></div>
+                    </div>
+                    <div *ngIf="product.details as image" class="swiper-slide">
+                        <img [attr.data-src]="imagePath + '/' + image.containerName + '/' + image.image + '?tr=w-573,h-673'" class="swiper-lazy" />
+                        <div class="swiper-lazy-preloader"></div>
+                    </div>
+                </div>
+                <button mat-icon-button class="swiper-button-prev swipe-arrow">
+                    <mat-icon>keyboard_arrow_left</mat-icon>
+                </button>
+                <button mat-icon-button class="swiper-button-next swipe-arrow">
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="prd-dlg-item" fxFlex="100" fxFlex.gt-sm="50" ngClass.gt-sm="px-2 m-0" ngClass.sm="mt-2" ngClass.xs="mt-2">
+            <h2>{{product.details.name}}</h2>
+            <div class="py-1 lh">
+                <p><span class="text-muted fw-500">{{'products.Category'|translate}}: </span><span>{{product.details.name }}</span></p>
+                <p><span class="text-muted fw-500">{{'products.Availibility'|translate}}: </span><span>{{'products.Available'|translate}}</span></p>
+
+            </div>
+            <div class="py-1">
+            </div>
+            <p class="pd-desc">
+                <td [innerHtml]='product.description'></td>
+            </p>
+            <div class="flex pd-ctrls">
+                <h2 class="new-price" style="display:inline-block">
+                    <ng-container *ngIf="(product.details.flag=='' && product.details.pricerefer=='');else one">{{calculatePrice(product.details.price, product.details.taxType, product.details.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}
+                    </ng-container>
+                    <ng-template #one>
+                        <span *ngIf="product.details.flag === 0">{{calculatePrice(product.details.pricerefer, product.details.taxType, product.details.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}</span>
+                        <span *ngIf="product.details.flag === 1"><del class="del">{{calculatePrice(product.details.price, product.details.taxType, product.details.taxValue) | currencysymbol: (listSandbox.symbolSetting$ | async)}}</del> {{calculatePrice(product.details.pricerefer, product.details.taxType, product.details.taxValue)  | currencysymbol: (listSandbox.symbolSetting$ | async)}}</span>
+
+                    </ng-template>
+                </h2>
+                <div class="divider"></div>
+                <app-controls [product]="product.details" [type]="'popup'" [page]="product.page" (closePopup)="closePopup($event)"></app-controls>
+            </div>
+        </div>
+    </div>
+</div>

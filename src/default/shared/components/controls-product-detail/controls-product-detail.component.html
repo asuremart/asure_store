@@ -1,0 +1,37 @@
+<div class="swiper-btn product-detail-button">
+    <ng-container *ngIf="product.pincodeBasedDelivery !== 1">
+        <ng-container *ngIf="(product.hasStock === 1 && product.stockStatus === 'outOfStock'); else addCart">
+            <h2 *ngIf="product.stockStatus === 'outOfStock'" class="flex byn-out-stock" type="button">
+                {{'products.OutofStock'|translate}}</h2>
+            <button *ngIf="product.stockStatus === 'outOfStock' && product.enableBackOrders === 1" class="flex byn" (click)="orderNow(product)">{{'products.OrderNow'|translate}}</button>
+        </ng-container>
+        <ng-template #addCart>
+            <button *ngIf="product.stockStatus !== 'outOfStock'" class="flex atc cart-btn" (click)="addToCart(product)"><img
+                                        src="assets/images/others/cart-icon.svg">{{'products.AddToCart'|translate}}</button>
+
+            <button class="flex byn" (click)="addToCart(product, true)"> <img
+                                        src="assets/images/others/power.svg"> {{'products.BuyNow'|translate}}</button>
+        </ng-template>
+
+    </ng-container>
+    <ng-container *ngIf="product.pincodeBasedDelivery === 1">
+        <ng-container *ngIf="(product.hasStock === 1 && product.stockStatus === 'outOfStock'); else addCart">
+            <h2 *ngIf="product.stockStatus === 'outOfStock'" class="flex byn-out-stock" type="button">
+                {{'products.Stock'|translate}} </h2>
+            <button *ngIf="show && product.stockStatus === 'outOfStock' && product.enableBackOrders === 1" class="flex byn" (click)="orderNow(product)"> {{'products.OrderNow'|translate}}</button>
+        </ng-container>
+        <ng-template #addCart>
+            <button *ngIf="show && product.stockStatus !== 'outOfStock'" class="flex atc cart-btn" (click)="addToCart(product)"><img
+                                        src="assets/images/others/cart-icon.svg">{{'products.AddToCart'|translate}}</button>
+
+            <button *ngIf="show && product.stockStatus !== 'outOfStock'" class="flex byn" (click)="addToCart(product, true)"> <img src="assets/images/others/power.svg">
+                                {{'products.BuyNow'|translate}} </button>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="(listSandbox.productDetails$ | async) as details">
+    <ng-container *ngIf="user && details.quotationAvailable === 1">
+        <button class="request-button" (click)="makeQuatation(details)" style="cursor: pointer">{{'products.Request'|translate}}</button>
+    </ng-container>
+</ng-container>

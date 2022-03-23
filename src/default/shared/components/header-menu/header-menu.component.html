@@ -1,0 +1,162 @@
+<mat-toolbar class="" color="primary">
+    <mat-toolbar-row fxLayoutAlign="space-between center" class="logo-toolbar theme-container">
+
+        <ng-container *ngIf="(listSandbox.settingDetail$ | async) as setting">
+            <a class="logo" routerLink="/" (click)="closeSubMenus()">
+                <span *ngIf="(commonSandbox.getLogo$ | async)?.logo=='false'">
+                <img
+                    [src]="imageUrl + '/' + setting.storeLogoPath + '/' + setting.storeLogo+'?tr=w-220,h-50'">
+                
+                </span>
+                <span *ngIf="(commonSandbox.getLogo$ | async)?.logo=='true'">
+                   <img   src ="assets/img/Black-sput-logo.svg"> 
+                </span>
+
+
+
+            </a>
+        </ng-container>
+        <div class="header-menu-main flex">
+
+            <div class="header-menu-main-left">
+
+                <div class="search-algin" fxFlex fxFlexOffset.gt-sm="10" fxShow="false" fxShow.gt-sm>
+                    <form method="get" class="search-form" fxLayout="row">
+                        <mat-menu #categoriesMenu="matMenu" [overlapTrigger]="false" xPosition="before" class="categories-dropdown">
+                        </mat-menu>
+                        <input [(ngModel)]="product" [ngModelOptions]="{standalone: true}" type="text" placeholder="{{'Shared.SearchProducts'|translate}}" fxFlex (keyup)="searchData($event)">
+                        <button mat-mini-fab type="button" class="search-top-btn" (click)="searchButtonClick()">
+                            <mat-icon color="primary" style="font-size: 25px;"aria-hidden="false" aria-label="Spurtcommerce Search Icon">search</mat-icon>
+                        </button>
+                        <div (click)="$event.stopPropagation()" *ngIf="dummyText !='' " style="height: 350px;" class="search-dropdown" infiniteScroll [infiniteScrollDistance]="3" [infiniteScrollThrottle]="500" [scrollWindow]="false" (scrolled)="onProductScrollDown()">
+                            <div (click)="search(detail)" class="flex sd-row" *ngFor="let detail of (listSandbox.getProductSearch$ | async)">
+                                <div class="sd-img">
+                                    <img [src]="imageUrl + '/' + detail.productImage?.containerName + '/' + detail.productImage?.image+'?tr=w-20,h-20'"> </div>
+                                <div class="sd-content">
+                                    <h3 style="white-space: normal;">{{detail?.name}}</h3>
+                                    <p>{{detail?.categoryName?.name}}</p>
+                                </div>
+                            </div>
+                            <span class="no-data-search" *ngIf="(listSandbox.getProductSearch$ | async)?.length === 0">No Data Found</span>
+                        </div>
+                    </form>
+                </div>
+                 <!-- <a mat-button [matMenuTriggerFor]="langMenu" #langMenuTrigger="matMenuTrigger" class="language-select">
+                    <ng-container *ngIf="languageList && languageList.length>0">
+                        <img style="width: 25px !important;"
+                            [src]="imagePath + '/' + languageList[index]?.imagePath + '/' + languageList[index]?.image + '?tr=w-20,h-20'">
+                    </ng-container>
+               
+                    <img src="assets/img/chevron-down-white.svg" class="arr-drop-lang">
+                </a>
+                <mat-menu class="language-menu" #langMenu="matMenu" [overlapTrigger]="false" xPosition="before" class="app-dropdown language-dropdown blackStyle">
+                    <mat-radio-group (mouseleave)="langMenuTrigger.closeMenu()">
+                        <button mat-menu-item *ngFor="let datas of languageList;let i=index" (click)="changeLanguage(datas.name,i)">
+                        <mat-radio-button value="{{datas.name}}"> <img
+                                [src]="imagePath + '/' + datas.imagePath + '/' + datas.image + '?tr=w-20,h-20'"><span>{{datas.name}}</span>
+                        </mat-radio-button>
+                    </button>
+                    </mat-radio-group>
+                </mat-menu> -->
+
+            </div>
+
+            <div class="header-menu-right flex">
+                <div fxLayout="row" fxLayoutAlign="center center" style="" class="sprtcrt">
+                    <app-spurt-cart></app-spurt-cart>
+                </div>
+                <a style="position: relative;" mat-button [matMenuTriggerFor]="accountMenu" #accountMenuTrigger="matMenuTrigger" class="blackStyle" *ngIf="(commonSandbox.getProfile$ | async)?.email">
+                    <mat-icon class="mat-icon-sm account-icon blackStyle" style="color: white;">person</mat-icon>
+                    <span fxShow="false" fxShow.gt-sm class="blackStyle" class="header-menu-color">Account</span>
+                    <mat-icon class="mat-icon-sm caret blackStyle" style="color: white;">arrow_drop_down</mat-icon>
+                </a>
+
+                <div class="sign-btn">
+                    <a class="sign-btn" style="position: relative; left: 0px;" mat-button routerLink="/auth/sign-in" *ngIf="!(commonSandbox.getProfile$ | async)?.email">
+                        <span fxShow="false" routerLink="/auth" fxShow.gt-sm class="blackStyle" class="signin-ico" class="header-menu-color">{{'Shared.SignIn'|translate}}
+                    </span>
+                        <span class="signinimg"> <img src="assets/img/user.svg"> </span>
+                    </a>
+
+                    <span *ngIf="!(commonSandbox.getProfile$ | async)?.email" class="signsep signinsep">|</span>
+
+                    <a class="sign-btn signup-btn" style="position: relative;right: 0px;" mat-button routerLink="/auth/sign-up" *ngIf="!(commonSandbox.getProfile$ | async)?.email">
+                        <span fxShow="false" fxShow.gt-sm class="blackStyle" class="signin-ico" class="header-menu-color">{{'Shared.SignUp'|translate}}</span>
+                    </a>
+                </div>
+                <span class="signsep  signinsep" *ngIf="!(commonSandbox.getProfile$ | async)?.email">|</span>
+                <a class="sign-btn vendor-btn" style="position: relative;right: 0px;" mat-button routerLink="/vendor">
+                    <span fxShow="false" fxShow.gt-sm class="blackStyle" class="signin-ico" class="header-menu-color">{{'Shared.Vendor'|translate}}</span>
+                </a>
+
+                <mat-menu #accountMenu="matMenu" backdropClass="language-menu" [overlapTrigger]="false" xPosition="before" class="app-dropdown account">
+                    <span>
+                    <div fxLayout="row" fxLayoutAlign="space-around center" class="user-info"
+                         *ngIf="(commonSandbox.getProfile$ | async)?.email">
+                        <img *ngIf='(commonSandbox.getProfile$ | async)?.avatarPath'
+                             [src]="imagePath + '/' + (commonSandbox.getProfile$ | async)?.avatarPath + '/' + (commonSandbox.getProfile$ | async)?.avatar + '?tr=w-60,h-60'"
+                             alt="user-image" width="50">
+                        <img *ngIf='!(commonSandbox.getProfile$ | async)?.avatarPath' src="./assets/images/others/user.jpg"
+                             alt="user-image" width="50">
+                        <p  class="header-account-dropdown">{{(commonSandbox.getProfile$ | async)?.firstName}}<br> <small>{{(commonSandbox.getProfile$ |
+                                async)?.email}}
+                            </small></p>
+                    </div>
+                    <div class="divider"></div>
+                    <a mat-menu-item routerLink="/account/myorders"> 
+                        <mat-icon class="mat-icon-sm">
+                            <mat-icon>description</mat-icon>
+                        </mat-icon>
+                        <span>{{'Shared.OrderHistory'|translate}}</span>
+                    </a>
+
+
+
+                    <a mat-menu-item routerLink="/account">
+                        <mat-icon class="mat-icon-sm">settings</mat-icon>
+                        <span>{{'Shared.AccountSettings'|translate}}</span>
+                    </a>
+
+                    <a mat-menu-item routerLink="/wishlist" fxHide="false" fxHide.gt-sm>
+                        <mat-icon class="mat-icon-sm">favorite</mat-icon>
+                        <span>{{'Shared.Wishlist'|translate}}({{commonSandbox.wishlistCount$ | async}})</span>
+                    </a>
+
+
+
+                    <div class="divider"></div>
+                    <a mat-menu-item (click)="signOut()">
+                        <mat-icon class="mat-icon-sm">power_settings_new</mat-icon>
+                        <span>{{'Shared.SignOut'|translate}}</span>
+                    </a>
+                    </span>
+                </mat-menu>
+            </div>
+
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-toolbar fxLayoutAlign="flex-end center" class="top-toolbar theme-container search-toolbar" fxShow.xs="true" fxShow.gt-xs="false" fxShow.gt-sm="false" fxShow.gt-md="false" fxShow.gt-lg="false" fxShow="true">
+    <div fxFlex fxShow.xs="true" fxShow.gt-xs="false" fxShow.gt-sm="false" fxShow.gt-md="false" fxShow.gt-lg="false" fxShow="true">
+        <form method="get" class="search-form" fxLayout="row">
+            <mat-menu #categoriesMenu="matMenu" [overlapTrigger]="false" xPosition="before" class="categories-dropdown">
+            </mat-menu>
+            <input [(ngModel)]="product" [ngModelOptions]="{standalone: true}" type="text" placeholder="{{'Shared.SearchProducts'|translate}}" fxFlex (keyup)="searchData($event)">
+            <button mat-mini-fab type="button" class="search-top-btn" style="background-color: #689f38;" (click)="searchButtonClick()">
+                <mat-icon color="accent" style="font-size: 25px;"aria-hidden="false" aria-label="Spurtcommerce Search Icon">search</mat-icon>
+            </button>
+            <div (click)="$event.stopPropagation()" *ngIf="dummyText !='' " style="height: 350px;" class="search-dropdown" infiniteScroll [infiniteScrollDistance]="3" [infiniteScrollThrottle]="500" [scrollWindow]="false" (scrolled)="onProductScrollDown()">
+                <div (click)="search(detail)" class="flex sd-row" *ngFor="let detail of (listSandbox.getProductSearch$ | async)">
+                    <div class="sd-img">
+                        <img [src]="imageUrl + '/' + detail.productImage?.containerName + '/' + detail.productImage?.image+'?tr=w-20,h-20'"> </div>
+                    <div class="sd-content">
+                        <h3 style="white-space: normal;">{{detail?.name}}</h3>
+                        <p>{{detail?.categoryName?.name}}</p>
+                    </div>
+                </div>
+                <span class="no-data-search" *ngIf="(listSandbox.getProductSearch$ | async)?.length === 0">No Data Found</span>
+            </div>
+        </form>
+    </div>
+</mat-toolbar>

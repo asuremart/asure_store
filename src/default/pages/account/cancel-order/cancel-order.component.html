@@ -1,0 +1,83 @@
+
+    <div class="flex order-title">
+      <h3>{{'CancelHistory.CancelHistory'|translate}}</h3>
+  </div>
+  
+  <!-- spinner -->
+  <div class="wrapper" *ngIf="sandbox.orderListLoading$ | async">
+      <div class="overlay">
+          <div class="spinner-wrapper">
+              <app-spinner [isShow]="sandbox.orderListLoading$ | async"></app-spinner>
+          </div>
+      </div>
+  </div>
+
+
+
+  <div class="orderhistory-row" *ngIf="(sandbox.myOrderDetails$ | async) as list">
+ 
+      <div class="ohr-head flex">
+          <div class="flex ohrh-lft ">
+              <div class="ohr-group">
+                  <p>{{'CancelHistory.orderid'|translate}} : # {{list.orderProductPrefixId}}</p>
+              </div>
+              <div class="ohr-group">
+                  <p>{{'CancelHistory.OrderDate'|translate}} :{{ list.orderedDate | date : ' dd MMM  yyyy' }}</p>
+              </div>
+          </div>
+      </div>
+      <!--head-->
+      <div class="ohr-content">
+          <div class="ohrc-row flex">
+              <div class="ohrcr-left flex">
+                  <div class="ohrcr-img">
+                    <img [src]="imageUrl + '/' + list.containerName + '/' + list.productImage + '?tr=w-200,h-200'">
+                  </div>
+                  <div class="ohrcr-cnt">
+                      <div class=" ohrcr-cnt-top" [formGroup]="cancelOrderForm">
+                          <h3> <a href="javascript:void(0)">{{list.productName}}</a> </h3>
+                          <div class="ohrcr-price flex">
+                              <p>{{'CancelHistory.Quantity'|translate}} :{{list.productQuantity}}</p> <h4> {{list?.currencySymbolLeft}} {{list.total|number}}</h4>
+                          </div>
+                          <div class="cancelling-why">
+                              <div class="flex cw-row">
+                                  <p>{{'CancelHistory.why'|translate}} ?</p>
+                                  <div class="pwr-rst">
+                                    <mat-form-field appearance="fill">
+                                        <mat-select  formControlName="reason">
+                                          <mat-option selected disabled hidden value="" Style="color: #2d292978;">{{'CancelHistory.Selectreason'|translate}}</mat-option>
+                                            <mat-option *ngFor="let data of sandbox.cancelOrderReasonList$ | async" [value]="data.id">{{data.reason}} </mat-option>  
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div class="error" *ngIf="cancelOrderForm.controls['reason'].hasError('required') && submitted">{{'CancelHistory.reason'|translate}}</div>              
+                                  </div>
+                                  
+                              </div>
+                              <div class="flex cw-row">
+                                  <p>{{'CancelHistory.cancelorder'|translate}}</p>
+                                  <div class="pwr-rst">
+                                  <textarea  formControlName="description" placeholder="{{'CancelHistory.cancelorder'|translate}}" [ngClass]="{'validationcolor':cancelOrderForm.controls['description'].hasError('required') && submitted}"></textarea>
+                                  <div class="error remark" *ngIf="cancelOrderForm.controls['description'].hasError('required') && submitted">{{'CancelHistory.entertext'|translate}}</div>              
+                                </div>
+                              </div>
+                          </div>
+                          <div class="cancel-note flex">
+                              <p> <span>{{'CancelHistory.Note'|translate}}</span>{{'CancelHistory.rules'|translate}} </p>
+                             
+                              <button (click)="submit(list)">
+                                <i *ngIf="sandbox?.cancelOrderLoading$ | async" class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+                                 <span *ngIf="!(sandbox?.cancelOrderLoading$ | async)">{{'account.Submit'|translate}}</span>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!--left-->
+          </div>
+      </div>
+    
+      <!--content-->
+  </div>
+  <!--row-->
+
+  

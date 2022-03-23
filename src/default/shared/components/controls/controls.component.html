@@ -1,0 +1,29 @@
+<div fxLayout="row" fxLayout.xs="column" [fxLayoutAlign]="align" class="text-muted">
+    <div *ngIf="type === 'detail'">
+        <span>Quantity:</span>
+        <button mat-icon-button matTooltip="Remove" (click)="changeCount('remove')">
+            <mat-icon>remove</mat-icon>
+        </button>
+        <span> {{quantity}} </span>
+        <button mat-icon-button matTooltip="Add" (click)="changeCount('add')">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <div class="flex prod-icon">
+        <app-product-compare [product]="product"></app-product-compare>
+        <button class="wishlist-card" mat-icon-button matTooltip="{{product.wishListStatus === 1 ? 'Added to wishlist': 'Add to wishlist'}}" (click)="addToWishList(product)">
+            <mat-icon *ngIf="product.wishListStatus === 1"><img src="assets/img/heart-select.svg"></mat-icon>
+            <mat-icon  *ngIf="product.wishListStatus !== 1" ><img src="assets/img/heart-outline.svg"></mat-icon>
+        </button>
+        <button class="quickview" *ngIf="type==='home'||type==='all'" mat-icon-button
+            matTooltip="{{'ViewCart.Quickview'|translate}}" (click)="openProductDialog(product)"><img src="assets/img/eye.svg"
+                alt=""></button>
+
+        <div *ngIf="type==='home'||'all'" class="cart-lk">
+            <a (click)="addToCart(product)" class="cart-btn">{{'controls.Addtocart'|translate}} </a>
+        </div>
+    </div>
+</div>
+<div *ngIf="product?.availibilityCount == 0 && type=='all'" class="bg-warn p-1 mt-2">
+    Sorry, this item is unavailable. Please choose a different one.
+</div>

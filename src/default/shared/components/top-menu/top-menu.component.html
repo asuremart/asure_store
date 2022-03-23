@@ -1,0 +1,22 @@
+<div class="top-menu">
+
+    <span>
+        <app-compare-count></app-compare-count>
+    </span>
+
+    <span>
+
+        <a mat-button routerLink="/wishlist">
+            <img src="assets/img/heart.svg">
+            <span class="blackStyle cart-items-count">
+                <ng-container style="color: white;" *ngIf="commonSandbox.wishlistCount$ | async;else noWhishListCount">
+                    {{(commonSandbox.wishlistCount$ | async)}}
+                </ng-container>
+
+                <ng-template #noWhishListCount>
+                    0
+                </ng-template>
+            </span></a>
+
+    </span>
+</div>

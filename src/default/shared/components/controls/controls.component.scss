@@ -1,0 +1,58 @@
+.prod-icon {
+  justify-content: space-between;
+  .picons {
+    justify-content:flex-start;
+    a {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    &.picons-lg {
+      a {
+        padding: 10px;
+      }
+    }
+  }
+
+  .cart-lk {
+    cursor: pointer;
+    a {
+      padding: 6px 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      border: 0;
+      border-radius: 3px;
+      text-decoration: none;
+      display: inline-block;
+      &:hover {
+
+      }
+    }
+    &.bc-lk {
+      a {
+        font-size: 20px;
+        padding: 10px 20px;
+      }
+    }
+  }
+
+}
+
+.prod-icon {
+  .mat-icon-button {
+    img {
+      width: 100%;
+    }
+  }
+  .picons {
+
+    a {
+      margin-right: .5rem;
+    }
+  }
+}
+
+
+.view {
+  margin-left: 20px;
+}

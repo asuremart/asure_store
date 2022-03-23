@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>{{'products.PostYourQuestion'|translate}}
+  <button class="clos-btn" [mat-dialog-close]="true" aria-label="Close"> <img src="assets/img/icon-close-tag.svg"> </button>
+</h2>
+<div class="cqa-qrite-que flex">
+  <h3 class="flex">{{'products.questionhere'|translate}}
+  </h3>
+  <textarea [(ngModel)]="question" name="question" [ngClass]="{'validationcolor':error}" placeholder="{{'products.questionhere'|translate}}"></textarea>
+  <div class="error" *ngIf="error">{{'products.enteryourquestion'|translate}}</div>
+
+  <div class="rqite-btn">
+    <button style="color: white;background: #FB641B;  " type="button" mat-raised-button (click)="submit()"
+      [disabled]="(sandbox.postAnswerLoading$ | async)">
+      <mat-spinner diameter="25" color="primary" *ngIf="sandbox.postQuestionLoading$ | async">
+      </mat-spinner> <span>{{'products.Submit'|translate}}</span>
+    </button>
+    <button style="color:#FB641B" type="button" [mat-dialog-close]="true" mat-raised-button class="cancel"
+      (click)="close()">{{'products.Cancel'|translate}} </button>
+  </div>
+
+
+
+</div>

@@ -1,0 +1,35 @@
+
+
+    <h2 mat-dialog-title>{{data.question}}
+        <button class="clos-btn" [mat-dialog-close]="true">x</button>
+    </h2>
+<mat-dialog-content class="mat-typography">
+    <div class="qna-wrap-rht">
+              
+        <div class="spinner-wrapper">
+            <app-spinner [isShow]="(sandbox.answerListLoading$ | async)"></app-spinner>
+        </div>
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between flex-end" class="qna-row p-2"  *ngFor="let answer of sandbox.answerList$ | async">
+                <div class="qna-col">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between flex-start" class="qna-ans">
+                        <span>Answer</span>
+                        <div class="qna-ans-rht">
+                                <h4>{{answer.answer}}</h4>
+                                <p> By {{data.postedBy.firstName}} {{answer.createdDate | date: "dd MMM yyyy"}} {{answer.createdDate | date: "h:mm a ":" +0000" + 5.30}} </p>
+                        </div>
+                        <div class="qna-rht"  fxLayout="row" fxLayout.xs="column" fxLayoutAlign="flex-end center">
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="flex-start center" class="like-col px-1"> <img src="assets/img/like.svg" [style.color]= "answer.likeType === 1 ? 'blue' : ''" style="cursor: pointer;" (click)="likeOrDislike($event, answer)"> {{answer.likes}} </div>
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="flex-start center"  class="like-col px-1"> <img  src="assets/img/dislike.svg"[style.color]= "answer.likeType === 2 ? 'blue' : ''" style="cursor: pointer;" (click)="likeOrDislike($event, answer)">{{answer.dislikes}} </div>
+                            <a href="javascript:void(0)" (click)="reportAbuse(answer)">Report Abuse</a>
+                        </div>
+
+                    </div>
+                   
+                </div>
+               
+            </div>
+            <div class="divider"></div>
+            
+        </div>
+
+</mat-dialog-content>

@@ -1,0 +1,55 @@
+
+    <h3 class="acc-title">{{'account.Dashboard'|translate}}</h3>
+
+    <div class="wrapper-accont dashboard-acct">
+    <p class="text-muted">{{'account.Hello'|translate}} <b>{{(commonSandbox.getProfile$ | async)?.firstName}}</b> {{'account.FromYourMyAccount..'|translate}}
+    </p>
+    
+    <div fxLayout="row wrap" class="flex-wrapper">
+        <div fxFlex="50" fxFlex.sm="50" fxFlex.xs="100" class="col">
+            <mat-card class="p-0">
+                <mat-card-header class="account-card-title" fxLayoutAlign="space-between center">
+                    <mat-card-title class="m-0">
+                        <h3>{{'account.AccountInformation'|translate}}</h3>
+                    </mat-card-title>
+                    <a mat-icon-button routerLink="/account/information">
+                        <img src="assets/img/edit.svg">
+                    </a>
+                </mat-card-header>
+                <div class="divider"></div>
+                <mat-card-content class="p-2 text-muted account-card-content">
+                    <div class="account-img">
+                        <img *ngIf='(commonSandbox.getProfile$ | async)?.avatarPath'
+                        [src]="imagePath + '/' + (commonSandbox.getProfile$ | async)?.avatarPath + '/' + (commonSandbox.getProfile$ | async)?.avatar + '?tr=w-60,h-60'"
+                        alt="user-image" width="50">
+                   <img *ngIf='!(commonSandbox.getProfile$ | async)?.avatarPath' src="./assets/images/others/user.jpg"
+                        alt="user-image" width="50">
+                    </div>
+                    <div class="account-rht">
+                    <p>{{(commonSandbox.getProfile$ | async)?.firstName}}</p>
+                    <p>{{(commonSandbox.getProfile$ | async)?.email}}</p>
+                    <p><a routerLink="/account/information" class="primary-text">{{'account.ChangePassword'|translate}}</a></p>
+                </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div fxFlex="50" fxFlex.sm="50" fxFlex.xs="100" class="col">
+            <mat-card class="p-0 ">
+                <mat-card-header class=" account-card-title" fxLayoutAlign="space-between center">
+                    <mat-card-title class="m-0">
+                        <h3>{{'account.Addresses'|translate}}</h3>
+                    </mat-card-title>
+                    <a routerLink="/account/addresses" mat-icon-button>
+                        <img src="assets/img/edit.svg">
+                    </a>
+                </mat-card-header>
+                <div class="divider"></div>
+                <mat-card-content class="text-muted account-card-content acc-rht">
+                    <button><img src="assets/img/delivery-truck.svg">{{'account.BillingAddress'|translate}}</button>
+                    <button><img src="assets/img/delivery-truck.svg">{{'account.ShippingAddress'|translate}}</button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    </div>
+    

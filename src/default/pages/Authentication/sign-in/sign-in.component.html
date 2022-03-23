@@ -1,0 +1,56 @@
+
+
+<div class="container">
+
+    <div class="registration-wrap flex">
+          <div class="reg-left">
+              <div class="reg-lft-inner" [formGroup]="loginForm">
+                    <h3> {{'login.login'|translate}}</h3>
+                    <div class="input-group" >
+                        <p>{{'login.E-mail'|translate}}</p>
+                        <input   formControlName="email"  (keyup.enter)="onLoginFormSubmit(loginForm.value)" placeholder="{{'login.gmail'|translate}}" [ngClass]="{'validationcolor':loginForm.controls['email'].hasError('required') && submitted}">
+                        <mat-error *ngIf="loginForm.controls['email'].hasError('required') && submitted">
+                          {{'Error.EmailIsRequired'|translate}}
+                      </mat-error>
+                      <mat-error *ngIf="loginForm.controls['email'].hasError('invalidEmail') && submitted">
+                          {{'Error.InvalidEmailAddress'|translate}}
+                      </mat-error>
+                    </div>
+                    <div class="input-group mb8">
+                        <p>{{'login.Password'|translate}}</p>
+                        <div class="ig-password">
+                            <input    [type]="hide ? 'password' : 'text'"  placeholder="{{'login.password'|translate}}"  (keyup.enter)="onLoginFormSubmit(loginForm.value)" formControlName="password"
+                            required [ngClass]="{'validationcolor':
+                            (loginForm.controls.password.hasError('required') && submitted)}">
+                            <mat-error *ngIf="loginForm.controls['password'].hasError('required') && submitted">
+                              {{'Error.PasswordisRequired'|translate}}
+                          </mat-error>
+                         
+                            <button (click)="hide=!hide"> <i class="material-icons">{{hide?'visibility_off':'visibility'}}</i> </button>
+                        </div>
+                    </div>
+                    <div class="fgtpwd"> <a  routerLink="/auth/forgot">{{'login.forgetpassword'|translate}}?</a> </div>
+                    <button class="submit cart-btn" style="cursor: pointer;"  (click)="onLoginFormSubmit(loginForm.value)">
+                        
+                        <i *ngIf="(authSandbox.loginLoading$ | async)"   class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+
+                        <span *ngIf="!(authSandbox.loginLoading$ | async)">  {{'login.login'|translate}}</span>
+                       </button>
+                    <p class="alread-acc">{{'login.Donothaveanaccount'|translate}}? <a href="javascript:void(0)" (click)="register()" >{{'login.registernow'|translate}}</a> </p>
+                    <div class="social-one-click">
+                        <button style="background: transparent; border: none; cursor: pointer;" (click)="socialSignIn('facebook')"> <img src="assets/img/fb-sign.svg"> Sign In with Facebook </button>
+                        <button style="background: transparent; border: none; cursor: pointer;" (click)="socialSignIn('gmail')"> <img src="assets/img/google-sign.svg"> Sign In with Google </button>
+                    </div>
+              </div>
+             
+          </div>
+          
+  
+        <div class="reg-rht">
+            <img src="assets/img/log-img.svg">
+        </div>
+  
+    </div>
+  
+  </div>
+

@@ -1,0 +1,60 @@
+<app-main-carousel></app-main-carousel>
+<div class="theme-container main">
+
+
+
+    <div class="products-tabs justin featured-week dod-container flex">
+        <div class="dod">
+            {{'homePage.todaydeals'|translate}}
+        </div>
+        <mat-tab-group mat-stretch-tabs>
+            <mat-tab>
+
+                <app-products-carousel [productType]="'today deals'" [products]="listSandbox.todayDealList$ | async">
+                </app-products-carousel>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+
+
+    <div class="products-tabs justin trending-products">
+
+        <mat-tab-group mat-stretch-tabs>
+            <mat-tab>
+                <h2 style="color: #212121; font-size: 24px; margin: 0 0 24px;">{{'homePage.featuredproduct'|translate}}
+                </h2>
+                <app-products-carousel [productType]="'today deals'" [products]="listSandbox.featuredList$ | async">
+                </app-products-carousel>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+
+    <div class="search-results" infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="200" (scrolled)="onScroll()">
+
+        <ng-container *ngIf="(listSandbox.widgetProductList$ | async) && (listSandbox.widgetProductList$ | async).length>0">
+            <ng-container *ngFor="let data of (listSandbox.widgetProductList$ | async); let i=index">
+
+                <div class="products-tabs justin trending-products">
+                    <mat-tab-group mat-stretch-tabs>
+
+                        <mat-tab label="Today Deals">
+                            <h2 style="color: #212121; font-size: 24px;">
+                                {{data.widgetTitle}}
+                            </h2>
+                            <app-widgets-products class="top-sell-prd" [productType]="'today deals'" [title]="data.widgetTitle" [products]="data.items" [widgetId]="data.widgetId" [type]="i">
+                            </app-widgets-products>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </ng-container>
+        </ng-container>
+
+    </div>
+
+
+
+
+
+</div>

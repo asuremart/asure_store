@@ -1,0 +1,25 @@
+<div class="body-section">
+    <ng-container *ngIf="!isFormOpen && (authSandbox.userToken$ | async)?.status !== 1">
+        <form [formGroup]="forgotForm" (ngSubmit)="onForgotFormSubmit(forgotForm.value)">
+            <div class="recover-form">
+                <span class="title horizontal-active-link">{{'Forgot Password.Forgot Password'|translate}}</span>
+                <span class="content">{{'Forgot Password.Enter Email'|translate}}</span>
+                <span class="content">{{'Forgot Password.Reset Password'|translate}}</span>
+                <input type="text" formControlName="email" placeholder="Your Email ID" [ngClass]="{'validationcolor':!(authSandbox.recoverLoading$ | async) && (forgotForm.controls['email'].hasError('required') && submitted)}">
+                <div *ngIf="!(authSandbox.recoverLoading$ | async) && (forgotForm.controls['email'].hasError('required') && submitted)" class="error-data">{{'Forgot Password.Email Required'|translate}}</div>
+                <div *ngIf="!(authSandbox.recoverLoading$ | async) && (forgotForm.controls['email'].hasError('invalidEmail') && submitted)" class="error-data">{{'Forgot Password.Invalid Email'|translate}}</div>
+                <button style="cursor: pointer;" class="ripple cart-btn" (click)="onForgotFormSubmit(forgotForm.value)">      
+                     <i *ngIf="authSandbox?.recoverLoading$ | async" class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+          
+                     <span style="cursor: pointer;" *ngIf="!(authSandbox.recoverLoading$ | async)">{{'Forgot Password.Submit'|translate}}</span>
+                  </button>
+                <p class="backLogin" routerLink="/auth/sign-in">{{'Forgot Password.GoBack'|translate}}</p>
+            </div>
+        </form>
+    </ng-container>
+    <ng-container *ngIf="isFormOpen && (authSandbox.userToken$ | async)?.status == 1">
+        <div class="recover-form">
+            <h2 style="font-weight: 500">{{(authSandbox.userToken$ | async)?.message}}</h2>
+        </div>
+    </ng-container>
+</div>

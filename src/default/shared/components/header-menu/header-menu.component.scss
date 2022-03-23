@@ -1,0 +1,121 @@
+::ng-deep .search-algin {
+  margin: 0px 16px 0px 48px!important;
+  max-width:576px;
+  position: relative;
+  .search-top-btn {
+    position: absolute;
+    right: 10px;
+    box-shadow: none!important;
+    border: 0!important;
+    background: transparent!important;
+  }
+  .search-dropdown {
+
+    display: none;
+
+  }
+   .search-dropdown {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+    height: 400px;
+    overflow-y: auto;
+
+    z-index:5;
+    .sd-row {
+      width: 100%;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      cursor: pointer;
+      .sd-img {
+        width: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          width: 100%;
+        }
+      }
+      .sd-content {
+        width: calc(100% - 24px);
+        padding-left: 16px;
+        h3 {
+          font-size: 14px;
+          font-weight: normal;
+          color: #646464;
+          line-height: 1.21;
+        }
+        p {
+          font-size: 12px;
+          font-weight: normal;
+          color: #2874f0;
+          line-height: 1.17;
+        }
+      }
+      &:hover {
+        background-color: #f5f9ff;
+      }
+    }
+    .sdsrh-row {
+      width: 100%;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      cursor: pointer;
+      .sd-img {
+        width: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          width: 100%;
+        }
+      }
+      .sd-content {
+        width: calc(100% - 16px);
+        padding-left: 16px;
+        p {
+          font-size: 14px;
+          font-weight: normal;
+          color: #646464;
+          line-height: 1.21;
+        }
+      }
+      &:hover {
+        background-color: #f5f9ff;
+      }
+    }
+  }
+}
+.language-select {
+
+  min-width: 30px;
+  padding: 0 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  img.arr-drop-lang {
+    position: relative;
+    top: 3px;
+    margin-left: 5px;
+  }
+}
+
+mat-toolbar-row {
+  min-height: 60px;
+
+}
+.no-data-search{
+  display: flex;
+  margin-top: 10rem;
+  justify-content: center;
+  color: black;
+}
+
